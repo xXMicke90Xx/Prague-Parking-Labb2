@@ -81,7 +81,6 @@ namespace Prague_Parking
 
         static void CarVisualize(string[] cars)
         {
-           
             for (int i = 0; i < Console.WindowWidth; i++)
             {
 

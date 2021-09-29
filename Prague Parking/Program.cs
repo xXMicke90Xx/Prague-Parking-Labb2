@@ -1,18 +1,24 @@
 ﻿using System;
 using System.Text;
+using System.Threading;
 
 namespace Prague_Parking
 {
     class Program
     {
+        public string[] myCars = new string[100];
         static void Main(string[] args)
         {
-            
-            Console.SetWindowSize(Console.LargestWindowWidth, Console.LargestWindowHeight);
-            Console.WriteLine(Console.WindowWidth +  "|" + Console.WindowHeight);
-            Console.WriteLine(String.Format("|{0,5}|{1,5}|{2,5}|{3,5}|", "CAR#0123456789#datumblalbla", "CAR#0123456789#datumblalbla", "CAR#0123456789#datumblalbla", "CAR#0123456789#datumblalbla"));
-           
-            string[] cars = new string[100];
+
+            Console.WindowWidth = 240;
+
+            Console.WriteLine(Console.WindowWidth + " | " + Console.WindowHeight);
+            //Console.WriteLine(String.Format("|{0,5}|{1,5}|{2,5}|{3,5}|", "CAR#0123456789#datumblalbla", "CAR#0123456789#datumblalbla", "CAR#0123456789#datumblalbla", "CAR#0123456789#datumblalbla"));
+
+            string[] cars = { "123456789012345678901234567890", "1234567890123456", "Car#abs1234542", "123456789012345678901234567890", "e", "f", "g", "h", "i", "o" };
+
+
+
             /*
              Programmeny:
              1. CAR#1234567890#2-4:05:55|CAR#1234567890#2-4:05:55         26.Ledig                               51.Ledig                               76. Ledig  
@@ -36,12 +42,15 @@ namespace Prague_Parking
 
              */
 
+            string input = "";
+            while (input != "5")
+            {
+                MainMenu();
+                input = GetResponse("\tPlease enter a choice 1-4, or 5 to exit");
+                MainMenyChoice(input);
+            }
 
-            MainMenu();
-            string input = GetResponse("\tPlease enter a choice 1-4, or 5 to exit");
-            MainMenyChoice(input);
-            
-             
+
 
             Console.ReadLine();
         }
@@ -62,6 +71,8 @@ namespace Prague_Parking
                     Help();
                     break;
                 case "5":
+                    Console.WriteLine("Closing project");
+                    Thread.Sleep(60);
                     Environment.Exit(0);
                     break;
                 default:
@@ -89,15 +100,15 @@ namespace Prague_Parking
 
         static void CarVisualize(string[] cars)
         {
-            for (int i = 0; i < Console.WindowWidth; i++)
+            for (int i = 0; i < 25; i++)
             {
-                Console.Write(i + ". ");
-                for (int j = 0; j < 4; j++)
+                Console.Write("         |");
+                for (int j = 0; i < 1; j++)
                 {
-                    Console.Write(cars[j].PadRight(30) + "!");
+
+                    Console.Write($"{cars[0].PadRight((Console.WindowWidth / 3) - 19)}|{cars[1].PadRight((Console.WindowWidth / 3) - 19)}|{cars[2].PadRight((Console.WindowWidth / 3) - 19)}|{cars[3]}|");
                 }
-                
-                
+
 
             }  //Ska skriva ut listan i 4 kolummer, så med andra ord  car --> tomt ---> ledig---->tomt
         }
@@ -110,9 +121,10 @@ namespace Prague_Parking
 
         static void CheckIn()
         {
+            Console.Clear();
             string vehicleType = "";
             string checkingIn = GetResponse("[1] check in a Car or [2] check in motorcykle");
-            while(checkingIn != "1" || checkingIn != "2")
+            while (checkingIn.Trim() != "1" && checkingIn.Trim() != "2")
             {
                 Console.WriteLine("Please enter 1 or 2");
                 checkingIn = GetResponse("[1] check in a Car or [2] check in motorcykle");
@@ -125,15 +137,26 @@ namespace Prague_Parking
                 case "2":
                     vehicleType = "MC ";
                     break;
-                    
             }
             string registrationNumber = GetResponse("Enter your registration number, max 10 characters long: ");
-            while(registrationNumber.Length > 10)
+            while (registrationNumber.Length > 10)
             {
                 registrationNumber = GetResponse("Enter your registration number, max 10 characters long: ");
             }
             //TODO: snygga till
-            string final = vehicleType  +  "#"  +  registrationNumber;
+            DateTime timeCheckedIn = DateTime.Now;
+            timeCheckedIn.ToString("yyyy-MM-dd:HH:mm");
+
+            string final = $"{ vehicleType}#{registrationNumber}#{timeCheckedIn}";
+            //skriver ut teststräng
+            Console.WriteLine(final);
+            //final = cars
+
+            //TODO sökfunktion för att söka efter en ledig plats
+            
+
+
+
         }
         static void MoveCar()
         {

@@ -7,7 +7,7 @@ namespace Prague_Parking
     class Program
     {
 
-        public static string[] myCars = new string[100];
+        public static string[] myVehicles = new string[100];
         static void Main(string[] args)
         {
             Console.SetWindowPosition(0, 0);
@@ -20,9 +20,9 @@ namespace Prague_Parking
 
 
 
-            
-            EmptySpace(myCars);
-            CarVisualize(myCars);
+
+            EmptySpace(myVehicles);
+            PrintListOfVehicles(myVehicles);
             string input = "";
             while (input != "5")
             {
@@ -30,6 +30,7 @@ namespace Prague_Parking
                 MainMenu();
                 input = GetResponse("\tPlease enter a choice 1-4, or 5 to exit");
                 MainMenyChoice(input);
+                PrintListOfVehicles(myVehicles);
             }
 
 
@@ -83,25 +84,34 @@ namespace Prague_Parking
             Console.WriteLine(mainMenu);
         }
         //----------------------- Skriver ut kolummer med alla platser som finns i myCars arrayen---------------------------------------
-        static void CarVisualize(string[] cars)
+        static void PrintListOfVehicles(string[] cars)
         {
 
             string lidAndBottom = "";
-            Console.WriteLine(lidAndBottom.PadRight(Console.WindowWidth-1, '_'));
+            Console.WriteLine(lidAndBottom.PadRight(Console.WindowWidth - 1, '_'));
             Console.WriteLine();
             for (int i = 0; i < 25; i++)
             {
-                Console.Write("         |");
+                Console.Write("          ");
 
-                Console.Write($"{i+1} {cars[i].PadRight((Console.WindowWidth / 3) - 19)}|");
+                Console.ForegroundColor = cars[i] == "Ledig" ? ConsoleColor.Green : ConsoleColor.Red;
+                Console.Write($"{(i < 9 ? "|" + (i + 1) + " " : "|" +(i + 1))} {cars[i].PadRight((Console.WindowWidth / 3) - 19)}|");
+
+                Console.ForegroundColor = cars[i + cars.Length / 4] == "Ledig" ? ConsoleColor.Green : ConsoleColor.Red;
                 Console.Write($"{i + cars.Length / 4 + 1} {cars[i + cars.Length / 4].PadRight((Console.WindowWidth / 3) - 19)}|");
+
+                Console.ForegroundColor = cars[i + cars.Length / 2] == "Ledig" ? ConsoleColor.Green : ConsoleColor.Red;
                 Console.Write($"{i + cars.Length / 2 + 1} {cars[i + cars.Length / 2].PadRight((Console.WindowWidth / 3) - 19)}|");
-                Console.Write($"{i + (cars.Length / 4)*3 + 1} {cars[i + (cars.Length / 4) * 3]}|");
+
+                Console.ForegroundColor = cars[i + (cars.Length / 4) * 3] == "Ledig" ? ConsoleColor.Green : ConsoleColor.Red;
+                Console.Write($"{i + (cars.Length / 4) * 3 + 1} {cars[i + (cars.Length / 4) * 3]}|");
 
                 Console.WriteLine();
 
 
+                Console.ResetColor();
             }
+
             Console.WriteLine(lidAndBottom.PadRight(Console.WindowWidth - 1, '_'));
 
 
@@ -138,46 +148,35 @@ namespace Prague_Parking
             {
                 registrationNumber = GetResponse("Enter your registration number, max 10 characters long: ");
             }
-            //TODO: snygga till
+
             DateTime timeCheckedIn = DateTime.Now;
-            
 
+
+            //TODO bryt ut i en funktion
             string final = $"{ vehicleType}#{registrationNumber}#{timeCheckedIn.ToString("MMM-dd HH:mm")}";
-            //skriver ut teststräng
-            Console.WriteLine(final);
-            //final = cars
-
-            //TODO sökfunktion för att söka efter en ledig plats
-
-            /*
-             Om type == CAR && index i listan == tom => lägg till strängen där.
-             Annars sök på nästa plats ==> om alla platser är fyllda => skriv ut det till konsolen
-
-            //TODO
-            //Kolla så att man inte försöker lägga till en tredje mc
-             
-             Om type == "MC " && index i listan == tom ==> lägg till strängen där.
-             Eller om FoundMatch == false => lägg till i slutet av strängen
-             Annars sök efter ny plats. Om ingen plats hittas => skriv ut det till konsolen
-
-
-
-             */
-
-            for (int i = 0; i < myCars.Length; i++)
+            for (int i = 0; i < myVehicles.Length; i++)
             {
-                if(myCars[i] == "Ledig" && vehicleType == "CAR")
+                if (myVehicles[i] == "Ledig" && vehicleType == "CAR")
                 {
-                    myCars[i] = final;
+                    myVehicles[i] = final;
                     break;
                 }
-                if(myCars[i] == "Ledig" && vehicleType == "MC ")
+                if (myVehicles[i] == "Ledig" && vehicleType == "MC ")
                 {
-                    myCars[i] = final;
+                    myVehicles[i] = final;
                     break;
+                }
+                else if (myVehicles[i].Contains("MC ") && vehicleType == "MC ")
+                {
+                    bool isTrue = FoundTwoMatches(myVehicles[i]);
+                    if (isTrue != true)
+                    {
+                        myVehicles[i] += final;
+                        break;
+                    }
                 }
             }
-            CarVisualize(myCars);
+
 
 
         }

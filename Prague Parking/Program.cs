@@ -6,45 +6,27 @@ namespace Prague_Parking
 {
     class Program
     {
-        public string[] myCars = new string[100];
+
+        public static string[] myCars = new string[100];
         static void Main(string[] args)
         {
-
+            Console.SetWindowPosition(0, 0);
             Console.WindowWidth = 240;
 
             Console.WriteLine(Console.WindowWidth + " | " + Console.WindowHeight);
             //Console.WriteLine(String.Format("|{0,5}|{1,5}|{2,5}|{3,5}|", "CAR#0123456789#datumblalbla", "CAR#0123456789#datumblalbla", "CAR#0123456789#datumblalbla", "CAR#0123456789#datumblalbla"));
 
-            string[] cars = { "123456789012345678901234567890", "1234567890123456", "Car#abs1234542", "123456789012345678901234567890", "e", "f", "g", "h", "i", "o" };
 
 
 
-            /*
-             Programmeny:
-             1. CAR#1234567890#2-4:05:55|CAR#1234567890#2-4:05:55         26.Ledig                               51.Ledig                               76. Ledig  
-             2. Ledig   
-             3. 1 plats för motorcykel ledig
 
-             ____________________________________________
-            |       Titel: Prague Parking               |
-            |                                           |
-            |        [1] Incheckning av fordon          |
-            |        [2] Flytta fordon                  |
-            |        [3] Ta bort fordon                 |
-            |        [4] Hjälp                          |
-            |        [5] Avsluta                        |
-            |                                           |
-            |                                           |
-            |                                           |
-            |___________________________________________|
-                   
-
-
-             */
-
+            
+            EmptySpace(myCars);
+            CarVisualize(myCars);
             string input = "";
             while (input != "5")
             {
+
                 MainMenu();
                 input = GetResponse("\tPlease enter a choice 1-4, or 5 to exit");
                 MainMenyChoice(input);
@@ -54,6 +36,7 @@ namespace Prague_Parking
 
             Console.ReadLine();
         }
+        //-----------------------Huvudmeny--------------------------------------
         static void MainMenyChoice(string input)
         {
             switch (input)
@@ -80,6 +63,8 @@ namespace Prague_Parking
                     break;
             }
         }
+
+        //--------------------Skriver ut Huvudmenyn -------------------------------
         static void MainMenu()
         {
             string mainMenu = @"
@@ -97,28 +82,38 @@ namespace Prague_Parking
             |___________________________________________|";
             Console.WriteLine(mainMenu);
         }
-
+        //----------------------- Skriver ut kolummer med alla platser som finns i myCars arrayen---------------------------------------
         static void CarVisualize(string[] cars)
         {
+
+            string lidAndBottom = "";
+            Console.WriteLine(lidAndBottom.PadRight(Console.WindowWidth-1, '_'));
+            Console.WriteLine();
             for (int i = 0; i < 25; i++)
             {
                 Console.Write("         |");
-                for (int j = 0; i < 1; j++)
-                {
 
-                    Console.Write($"{cars[0].PadRight((Console.WindowWidth / 3) - 19)}|{cars[1].PadRight((Console.WindowWidth / 3) - 19)}|{cars[2].PadRight((Console.WindowWidth / 3) - 19)}|{cars[3]}|");
-                }
+                Console.Write($"{i+1} {cars[i].PadRight((Console.WindowWidth / 3) - 19)}|");
+                Console.Write($"{i + cars.Length / 4 + 1} {cars[i + cars.Length / 4].PadRight((Console.WindowWidth / 3) - 19)}|");
+                Console.Write($"{i + cars.Length / 2 + 1} {cars[i + cars.Length / 2].PadRight((Console.WindowWidth / 3) - 19)}|");
+                Console.Write($"{i + (cars.Length / 4)*3 + 1} {cars[i + (cars.Length / 4) * 3]}|");
+
+                Console.WriteLine();
 
 
-            }  //Ska skriva ut listan i 4 kolummer, så med andra ord  car --> tomt ---> ledig---->tomt
+            }
+            Console.WriteLine(lidAndBottom.PadRight(Console.WindowWidth - 1, '_'));
+
+
         }
+        //-----------------------------Tar emot menyval-------------------------------------------------------
         static string GetResponse(string message)
         {
             Console.WriteLine(message);
             string choice = Console.ReadLine();
             return choice;
         }
-
+        // -------------------------Sak ta emot och lagra vart bilar på tillgänglig plats--------------------------
         static void CheckIn()
         {
             Console.Clear();
@@ -145,18 +140,59 @@ namespace Prague_Parking
             }
             //TODO: snygga till
             DateTime timeCheckedIn = DateTime.Now;
-            timeCheckedIn.ToString("yyyy-MM-dd:HH:mm");
+            
 
-            string final = $"{ vehicleType}#{registrationNumber}#{timeCheckedIn}";
+            string final = $"{ vehicleType}#{registrationNumber}#{timeCheckedIn.ToString("MMM-dd HH:mm")}";
             //skriver ut teststräng
             Console.WriteLine(final);
             //final = cars
 
             //TODO sökfunktion för att söka efter en ledig plats
-            
+
+            /*
+             Om type == CAR && index i listan == tom => lägg till strängen där.
+             Annars sök på nästa plats ==> om alla platser är fyllda => skriv ut det till konsolen
+
+            //TODO
+            //Kolla så att man inte försöker lägga till en tredje mc
+             
+             Om type == "MC " && index i listan == tom ==> lägg till strängen där.
+             Eller om FoundMatch == false => lägg till i slutet av strängen
+             Annars sök efter ny plats. Om ingen plats hittas => skriv ut det till konsolen
 
 
 
+             */
+
+            for (int i = 0; i < myCars.Length; i++)
+            {
+                if(myCars[i] == "Ledig" && vehicleType == "CAR")
+                {
+                    myCars[i] = final;
+                    break;
+                }
+                if(myCars[i] == "Ledig" && vehicleType == "MC ")
+                {
+                    myCars[i] = final;
+                    break;
+                }
+            }
+            CarVisualize(myCars);
+
+
+        }
+
+        static bool FoundTwoMatches(string finalString)
+        {
+
+            bool isFound = false;
+            int firstMatch = finalString.IndexOf("MC ");
+            int secondMatch = finalString.IndexOf("MC ", firstMatch + 1);
+            if (secondMatch != -1)
+                isFound = true;
+            else
+                isFound = false;
+            return isFound;
         }
         static void MoveCar()
         {
@@ -164,6 +200,18 @@ namespace Prague_Parking
         }
         static void CheckOut()
         {
+
+        }
+        static void EmptySpace(string[] cars)
+        {
+            for (int i = 0; i < cars.Length; i++)
+            {
+                if (cars[i] == null)
+                {
+                    cars[i] = "Ledig";
+                }
+            }
+
 
         }
         static void Help()

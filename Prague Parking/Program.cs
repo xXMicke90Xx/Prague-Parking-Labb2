@@ -22,7 +22,7 @@ namespace Prague_Parking
             {
 
                 MainMenu();
-                input = GetResponse("\tPlease enter a choice 1-4, or 5 to exit:");
+                input = GetResponse("Please enter a choice 1-4, or 5 to exit:");
                 MainMenyChoice(input);
                 PrintColumnsOfVehicles(myVehicles);
             }
@@ -129,7 +129,7 @@ namespace Prague_Parking
         static string GetResponse(string message)
         {
             Console.WriteLine();
-            Console.SetCursorPosition((Console.WindowWidth - message.Length) / 2 - 4, Console.CursorTop);
+            Console.SetCursorPosition((Console.WindowWidth - message.Length) / 2 - 1, Console.CursorTop);
             Console.Write(message);
             string choice = Console.ReadLine();
             Console.WriteLine();
@@ -312,15 +312,29 @@ namespace Prague_Parking
 
             
         }
-        static void EmptySpace(string[] Vehicles)
+        static void CheckOut(string [] vehicles)
         {
-            for (int i = 0; i < Vehicles.Length; i++)
+            ConsoleKeyInfo cki;
+            cki = Console.ReadKey(true);
+            Console.Write("Please enter the registration number of the car you wish to check out: ");
+            Console.WriteLine();
+            string isValidCaracter = "";
+            while (true)
             {
-                if (Vehicles[i] == null)
+                cki = Console.ReadKey(true);
+                if (char.IsLetterOrDigit(cki.KeyChar))
                 {
-                    Vehicles[i] = "Ledig";
+                    isValidCaracter += cki.KeyChar;
                 }
+
+
+
+                Console.Write(isValidCaracter);
+
+
             }
+
+            
 
 
         }

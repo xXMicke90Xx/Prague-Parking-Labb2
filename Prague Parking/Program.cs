@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Threading;
+using System.Text.RegularExpressions;
 
 namespace Prague_Parking
 {
@@ -86,7 +87,8 @@ namespace Prague_Parking
         //----------------------- Skriver ut kolummer med alla platser som finns i myCars arrayen---------------------------------------
         static void PrintListOfVehicles(string[] cars)
         {
-
+           
+            
             string lidAndBottom = "";
             Console.WriteLine(lidAndBottom.PadRight(Console.WindowWidth - 1, '_'));
             Console.WriteLine();
@@ -94,17 +96,17 @@ namespace Prague_Parking
             {
                 Console.Write("          ");
 
-                Console.ForegroundColor = cars[i] == "Ledig" ? ConsoleColor.Green : ConsoleColor.Red;
+                ColorMatch(cars[i]);
                 Console.Write($"{(i < 9 ? "|" + (i + 1) + " " : "|" +(i + 1))} {cars[i].PadRight((Console.WindowWidth / 3) - 19)}|");
 
-                Console.ForegroundColor = cars[i + cars.Length / 4] == "Ledig" ? ConsoleColor.Green : ConsoleColor.Red;
+                ColorMatch(cars[i + cars.Length / 4]);
                 Console.Write($"{i + cars.Length / 4 + 1} {cars[i + cars.Length / 4].PadRight((Console.WindowWidth / 3) - 19)}|");
 
-                Console.ForegroundColor = cars[i + cars.Length / 2] == "Ledig" ? ConsoleColor.Green : ConsoleColor.Red;
+                ColorMatch(cars[i + cars.Length / 2]);
                 Console.Write($"{i + cars.Length / 2 + 1} {cars[i + cars.Length / 2].PadRight((Console.WindowWidth / 3) - 19)}|");
 
-                Console.ForegroundColor = cars[i + (cars.Length / 4) * 3] == "Ledig" ? ConsoleColor.Green : ConsoleColor.Red;
-                Console.Write($"{i + (cars.Length / 4) * 3 + 1} {cars[i + (cars.Length / 4) * 3]}|");
+                ColorMatch(cars[i + (cars.Length / 4)*3]);
+                Console.Write($"{i + (cars.Length / 4) * 3 + 1}{(i == 24? "": " ")} {cars[i + (cars.Length / 4) * 3]}|");
 
                 Console.WriteLine();
 
@@ -180,6 +182,28 @@ namespace Prague_Parking
 
 
         }
+        //---------------------Bestämmer Konsoll färg -----------------------
+        static void ColorMatch (string Vehicle)
+        {
+            if (Vehicle.Substring(0, 3) == "CAR")
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                
+            }
+            else if (Vehicle.Substring(0, 3) == "MC " && FoundTwoMatches(Vehicle.ToString()) == false)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+            }
+            else if (Vehicle.Substring(0, 3) == "MC " && FoundTwoMatches(Vehicle.ToString()))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+            }
+            else if (Vehicle == "Ledig")
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+            }
+
+        }
 
         static bool FoundTwoMatches(string finalString)
         {
@@ -201,13 +225,13 @@ namespace Prague_Parking
         {
 
         }
-        static void EmptySpace(string[] cars)
+        static void EmptySpace(string[] Vehicles)
         {
-            for (int i = 0; i < cars.Length; i++)
+            for (int i = 0; i < Vehicles.Length; i++)
             {
-                if (cars[i] == null)
+                if (Vehicles[i] == null)
                 {
-                    cars[i] = "Ledig";
+                    Vehicles[i] = "Ledig";
                 }
             }
 

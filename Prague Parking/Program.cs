@@ -266,7 +266,6 @@ namespace Prague_Parking
                     myVehicles[index] = "Ledig";
                 }
             }
-
         }
         static void CheckOut()
         {

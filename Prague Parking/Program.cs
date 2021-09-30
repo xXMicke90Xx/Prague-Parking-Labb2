@@ -191,19 +191,17 @@ namespace Prague_Parking
                     bool isTrue = FoundTwoMatches(myVehicles[i]);
                     if (isTrue != true)
                     {
+                        myVehicles[i] += "|";
                         myVehicles[i] += final;
                         break;
                     }
                 }
             }
-
             Console.Clear();
-
         }
 
         static bool FoundTwoMatches(string finalString)
         {
-
             bool isFound = false;
             int firstMatch = finalString.IndexOf("MC ");
             int secondMatch = finalString.IndexOf("MC ", firstMatch + 1);
@@ -235,7 +233,15 @@ namespace Prague_Parking
 
             //TODO kolla så man inte går utanför arrayen
             int nextSpot = GetResponseAsNumber("Which spot do you want to move the vehicle to?");
+            //minskar för användaren
             nextSpot--;
+            //TODE testa
+            while(nextSpot< 0 && nextSpot > 99)
+            {
+                Console.WriteLine("Använd ett tal mellan 1 och 100");
+                nextSpot = GetResponseAsNumber("Which spot do you want to move the vehicle to?");
+                nextSpot--;
+            }
             for (int i = 0; i < myVehicles.Length; i++)
             {
                 if (myVehicles[nextSpot].Contains("Ledig"))

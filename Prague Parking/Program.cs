@@ -306,38 +306,18 @@ namespace Prague_Parking
             }
 
 
-            
-            
-
-
-            
-        }
-        static void CheckOut(string [] vehicles)
-        {
-            ConsoleKeyInfo cki;
-            cki = Console.ReadKey(true);
-            Console.Write("Please enter the registration number of the car you wish to check out: ");
-            Console.WriteLine();
-            string isValidCaracter = "";
-            while (true)
-            {
-                cki = Console.ReadKey(true);
-                if (char.IsLetterOrDigit(cki.KeyChar))
-                {
-                    isValidCaracter += cki.KeyChar;
-                }
 
 
 
-                Console.Write(isValidCaracter);
-
-
-            }
-
-            
 
 
         }
+
+
+
+
+
+
         static void FillNullSpaces(string[] Vehicles)
         {
             for (int i = 0; i < Vehicles.Length; i++)

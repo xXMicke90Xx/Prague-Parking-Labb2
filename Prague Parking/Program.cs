@@ -11,8 +11,9 @@ namespace Prague_Parking
         public static string[] myVehicles = new string[100];
         static void Main(string[] args)
         {
-            Console.SetWindowPosition(0, 0);
+            
             Console.WindowWidth = 240;
+            Console.WindowHeight = 63;
 
             Console.WriteLine(Console.WindowWidth + " | " + Console.WindowHeight);
             //Console.WriteLine(String.Format("|{0,5}|{1,5}|{2,5}|{3,5}|", "CAR#0123456789#datumblalbla", "CAR#0123456789#datumblalbla", "CAR#0123456789#datumblalbla", "CAR#0123456789#datumblalbla"));
@@ -69,20 +70,34 @@ namespace Prague_Parking
         //--------------------Skriver ut Huvudmenyn -------------------------------
         static void MainMenu()
         {
-            string mainMenu = @"
-            _____________________________________________
-            |       Titel: Prague Parking               |
-            |                                           |
-            |        [1] Incheckning av fordon          |
-            |        [2] Flytta fordon                  |
-            |        [3] Checka utfordon                |
-            |        [4] Hjälp                          |
-            |        [5] Avsluta                        |
-            |                                           |
-            |                                           |
-            |                                           |
-            |___________________________________________|";
-            Console.WriteLine(mainMenu);
+
+            string[] menu = new string[11] {
+                "_____________________________________________",
+                "|       Titel: Prague Parking               |",
+                "|                                           |",
+                "|        [1] Incheckning av fordon          |",
+                "|        [2] Flytta fordon                  |",
+                "|        [3] Checka utfordon                |",
+                "|        [4] Hjälp                          |",
+                "|        [5] Avsluta                        |",
+                "|                                           |",
+                "|                                           |",
+                "_____________________________________________"};
+            
+            
+            for (int i = 0; i < menu.Length; i++)
+            {
+                Console.WriteLine(menu[i].PadLeft(Console.WindowWidth/2 + 22));
+            }
+
+            Console.WriteLine(Console.WindowWidth);
+            
+            
+
+
+
+            
+           
         }
         //----------------------- Skriver ut kolummer med alla platser som finns i myCars arrayen---------------------------------------
         static void PrintListOfVehicles(string[] cars)
@@ -90,7 +105,7 @@ namespace Prague_Parking
            
             
             string lidAndBottom = "";
-            Console.WriteLine(lidAndBottom.PadRight(Console.WindowWidth - 1, '_'));
+            Console.WriteLine(lidAndBottom.PadRight(Console.WindowWidth - 3, '_'));
             Console.WriteLine();
             for (int i = 0; i < 25; i++)
             {
@@ -114,7 +129,7 @@ namespace Prague_Parking
                 Console.ResetColor();
             }
 
-            Console.WriteLine(lidAndBottom.PadRight(Console.WindowWidth - 1, '_'));
+            Console.WriteLine(lidAndBottom.PadRight(Console.WindowWidth - 3, '_'));
 
 
         }

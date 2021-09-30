@@ -15,24 +15,16 @@ namespace Prague_Parking
             Console.WindowWidth = 240;
             Console.WindowHeight = 63;
 
-            Console.WriteLine(Console.WindowWidth + " | " + Console.WindowHeight);
-            //Console.WriteLine(String.Format("|{0,5}|{1,5}|{2,5}|{3,5}|", "CAR#0123456789#datumblalbla", "CAR#0123456789#datumblalbla", "CAR#0123456789#datumblalbla", "CAR#0123456789#datumblalbla"));
-
-
-
-
-
-
-            EmptySpace(myVehicles);
-            PrintListOfVehicles(myVehicles);
+            FillNullSpaces(myVehicles);
+            PrintColumnsOfVehicles(myVehicles);
             string input = "";
             while (input != "5")
             {
 
                 MainMenu();
-                input = GetResponse("\tPlease enter a choice 1-4, or 5 to exit");
+                input = GetResponse("\tPlease enter a choice 1-4, or 5 to exit:");
                 MainMenyChoice(input);
-                PrintListOfVehicles(myVehicles);
+                PrintColumnsOfVehicles(myVehicles);
             }
 
 
@@ -90,7 +82,7 @@ namespace Prague_Parking
                 Console.WriteLine(menu[i].PadLeft(Console.WindowWidth/2 + 22));
             }
 
-            Console.WriteLine(Console.WindowWidth);
+            
             
             
 
@@ -100,12 +92,12 @@ namespace Prague_Parking
            
         }
         //----------------------- Skriver ut kolummer med alla platser som finns i myCars arrayen---------------------------------------
-        static void PrintListOfVehicles(string[] cars)
+        static void PrintColumnsOfVehicles(string[] cars)
         {
            
             
-            string lidAndBottom = "";
-            Console.WriteLine(lidAndBottom.PadRight(Console.WindowWidth - 3, '_'));
+            string frameForColumns = "";
+            Console.WriteLine(frameForColumns.PadRight(Console.WindowWidth - 3, '_'));
             Console.WriteLine();
             for (int i = 0; i < 25; i++)
             {
@@ -129,15 +121,18 @@ namespace Prague_Parking
                 Console.ResetColor();
             }
 
-            Console.WriteLine(lidAndBottom.PadRight(Console.WindowWidth - 3, '_'));
+            Console.WriteLine(frameForColumns.PadRight(Console.WindowWidth - 3, '_'));
 
 
         }
         //-----------------------------Tar emot menyval-------------------------------------------------------
         static string GetResponse(string message)
         {
-            Console.WriteLine(message);
+            Console.WriteLine();
+            Console.SetCursorPosition((Console.WindowWidth - message.Length) / 2 - 4, Console.CursorTop);
+            Console.Write(message);
             string choice = Console.ReadLine();
+            Console.WriteLine();
             return choice;
         }
         static int GetResponseAsNumber(string message)
@@ -286,7 +281,7 @@ namespace Prague_Parking
         {
 
         }
-        static void EmptySpace(string[] Vehicles)
+        static void FillNullSpaces(string[] Vehicles)
         {
             for (int i = 0; i < Vehicles.Length; i++)
             {

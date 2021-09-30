@@ -133,6 +133,7 @@ namespace Prague_Parking
             return result;
         }
         // -------------------------Sak ta emot och lagra vart bilar på tillgänglig plats--------------------------
+        //TODO: kolla så regnummer inte matas in med fel tecken
         static void CheckIn()
         {
 
@@ -194,39 +195,6 @@ namespace Prague_Parking
 
         }
         //---------------------Bestämmer Konsoll färg -----------------------
-        static void ColorMatch (string Vehicle)
-        {
-            if (Vehicle.Substring(0, 3) == "CAR")
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                
-            }
-            else if (Vehicle.Substring(0, 3) == "MC " && FoundTwoMatches(Vehicle.ToString()) == false)
-            {
-                Console.ForegroundColor = ConsoleColor.Yellow;
-            }
-            else if (Vehicle.Substring(0, 3) == "MC " && FoundTwoMatches(Vehicle.ToString()))
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-            }
-            else if (Vehicle == "Ledig")
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-            }
-
-        }
-
-        static bool FoundTwoMatches(string finalString)
-        {
-            bool isFound = false;
-            int firstMatch = finalString.IndexOf("MC ");
-            int secondMatch = finalString.IndexOf("MC ", firstMatch + 1);
-            if (secondMatch != -1)
-                isFound = true;
-            else
-                isFound = false;
-            return isFound;
-        }
         static void MoveCar()
         {
             string searchForRegistration = GetResponse("Which registration number do you want to move?");
@@ -260,16 +228,53 @@ namespace Prague_Parking
             }
             for (int i = 0; i < myVehicles.Length; i++)
             {
-                if (myVehicles[nextSpot].Contains("Ledig"))
+                if (myVehicles[nextSpot].Contains("Ledig") && myVehicles[index].Contains("CAR"))
                 {
                     myVehicles[nextSpot] = myVehicles[index];
                     myVehicles[index] = "Ledig";
                 }
+                else if(myVehicles[nextSpot].Contains("Ledig") && myVehicles[index].Contains("MC "))
+                {
+
+                }
             }
+        }
+        static void ColorMatch (string Vehicle)
+        {
+            if (Vehicle.Substring(0, 3) == "CAR")
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                
+            }
+            else if (Vehicle.Substring(0, 3) == "MC " && FoundTwoMatches(Vehicle.ToString()) == false)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+            }
+            else if (Vehicle.Substring(0, 3) == "MC " && FoundTwoMatches(Vehicle.ToString()))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+            }
+            else if (Vehicle == "Ledig")
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+            }
+
         }
         static void CheckOut()
         {
 
+        }
+
+        static bool FoundTwoMatches(string finalString)
+        {
+            bool isFound = false;
+            int firstMatch = finalString.IndexOf("MC ");
+            int secondMatch = finalString.IndexOf("MC ", firstMatch + 1);
+            if (secondMatch != -1)
+                isFound = true;
+            else
+                isFound = false;
+            return isFound;
         }
         static void EmptySpace(string[] Vehicles)
         {

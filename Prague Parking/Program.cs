@@ -14,7 +14,6 @@ namespace Prague_Parking
 
             Console.WindowWidth = 240;
             Console.WindowHeight = 63;
-
             FillNullSpaces(myVehicles);
             PrintColumnsOfVehicles(myVehicles);
             string input = "";
@@ -22,8 +21,9 @@ namespace Prague_Parking
             {
 
                 MainMenu();
-                input = GetResponse("Please enter a choice 1-4, or 5 to exit:");
+                input = GetResponse("Please enter a choice 1-4, or 5 to exit: ");
                 MainMenyChoice(input);
+                Console.Clear();
                 PrintColumnsOfVehicles(myVehicles);
             }
 
@@ -145,9 +145,9 @@ namespace Prague_Parking
         static void CheckIn()
         {
 
-            Console.Clear();
+            // Console.Clear();
             string vehicleType = "";
-            string checkingIn = GetResponse("[1] check in a Car or [2] check in motorcykle");
+            string checkingIn = GetResponse("[1] check in a Car or [2] check in motorcykle ");
             while (checkingIn.Trim() != "1" && checkingIn.Trim() != "2")
             {
                 Console.WriteLine("Please enter 1 or 2");
@@ -282,8 +282,8 @@ namespace Prague_Parking
             do
             {
                 Console.WriteLine("Använd ett tal mellan 1 och 100");
-                nextSpot  = GetResponseAsNumber("Which spot do you want to move the vehicle to?");
-                
+                nextSpot = GetResponseAsNumber("Which spot do you want to move the vehicle to?");
+
             } while (nextSpot < 0 && nextSpot >= 99);
             for (int i = 0; i < myVehicles.Length; i++)
             {
@@ -292,14 +292,14 @@ namespace Prague_Parking
                     myVehicles[nextSpot] = myVehicles[index];
                     myVehicles[index] = "Ledig";
                 }
-                else if(myVehicles[nextSpot].Contains("Ledig") && myVehicles[index].Contains("MC ") && FoundTwoMatches(myVehicles[index]) == false)
+                else if (myVehicles[nextSpot].Contains("Ledig") && myVehicles[index].Contains("MC ") && FoundTwoMatches(myVehicles[index]) == false)
                 {
                     myVehicles[nextSpot] = myVehicles[index];
                     myVehicles[index] = "Ledig";
                 }
                 else if (myVehicles[nextSpot].Contains("Ledig") && myVehicles[index].Contains("MC "))
                 {
-                    
+
                 }
             }
         }
@@ -320,7 +320,7 @@ namespace Prague_Parking
 
                 switch (cki.Key)
                 {
-                   
+
 
                     case ConsoleKey.Enter:
                         {
@@ -373,7 +373,7 @@ namespace Prague_Parking
                                 isValidCaracter += cki.KeyChar;
                                 Console.Write($"Registration number: {isValidCaracter}");
                                 PrintSearchResult(isValidCaracter.ToUpper(), myVehicles);
-                                
+
                             }
                             break;
 
@@ -400,13 +400,13 @@ namespace Prague_Parking
         static void PrintSearchResult(string toCheck, string[] listOfVehicles)
         {
             string[] foundVehicles = new string[listOfVehicles.Length];
-            
+
             for (int i = 0; i < listOfVehicles.Length; i++)
             {
                 if (listOfVehicles[i].Contains(toCheck) && listOfVehicles[i] != "Ledig")
                 {
 
-                    
+
                     Console.WriteLine(listOfVehicles[i]);
 
 

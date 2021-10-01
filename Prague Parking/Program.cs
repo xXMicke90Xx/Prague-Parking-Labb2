@@ -360,6 +360,7 @@ namespace Prague_Parking
                            | [4] Exit                                  |
                            |                                           |
                            |___________________________________________|";
+            Console.WriteLine(help);
         }
     }
 }

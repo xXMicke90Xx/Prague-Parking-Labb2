@@ -81,15 +81,6 @@ namespace Prague_Parking
             {
                 Console.WriteLine(menu[i].PadLeft(Console.WindowWidth / 2 + 22));
             }
-
-
-
-
-
-
-
-
-
         }
         //----------------------- Skriver ut kolummer med alla platser som finns i myCars arrayen---------------------------------------
         static void PrintColumnsOfVehicles(string[] cars)
@@ -140,9 +131,16 @@ namespace Prague_Parking
             Console.WriteLine(message);
             string choice = Console.ReadLine();
             bool isInt = int.TryParse(choice, out int result);
+
+            result--;
+            if (result < 0)
+                result = 0;
             return result;
         }
         // -------------------------Sak ta emot och lagra vart bilar på tillgänglig plats--------------------------
+
+
+        //TODO: kolla så regnummer inte redan finns i listan
         //TODO: kolla så regnummer inte matas in med fel tecken
         static void CheckIn()
         {
@@ -167,11 +165,10 @@ namespace Prague_Parking
             //TODO:
             //kolla så inmatad sträng är giltig och med rätt tecken
             string registrationNumber = GetResponse("Enter your registration number, max 10 characters long: ");
-            while (registrationNumber.Length > 10)
-            {
-                registrationNumber = GetResponse("Enter your registration number, max 10 characters long: ");
-            }
             registrationNumber = registrationNumber.ToUpper();
+            //kollar så att det inmatade registreringsnummret är max 10 tecken lång & inte redan finns
+            registrationNumber = EnterRegistration(registrationNumber);
+
             DateTime timeCheckedIn = DateTime.Now;
 
 
@@ -204,6 +201,29 @@ namespace Prague_Parking
 
 
         }
+
+        //TODO fixa logiken
+        private static string EnterRegistration(string registrationNumber)
+        {
+            for (int i = 0; i < myVehicles.Length; i++)
+            {
+                if (myVehicles[i].Contains(registrationNumber))
+                {
+                    while (myVehicles[i].Contains(registrationNumber))
+                    {
+                        registrationNumber = GetResponse("Enter your registration number, max 10 characters long: ");
+                    }
+                }
+            }
+            while (registrationNumber.Length > 10)
+            {
+                registrationNumber = GetResponse("Enter your registration number, max 10 characters long: ");
+
+            }
+
+            return registrationNumber;
+        }
+
         //---------------------Bestämmer Konsoll färg -----------------------
         static void ColorMatch(string Vehicle)
         {
@@ -257,18 +277,14 @@ namespace Prague_Parking
             else
                 Console.WriteLine("No matches found");
 
-
-            //TODO kolla så man inte går utanför arrayen
-            int nextSpot = GetResponseAsNumber("Which spot do you want to move the vehicle to?");
-            //minskar för användaren
-            nextSpot--;
-            //TODE testa
-            while (nextSpot < 0 && nextSpot > 99)
+            int nextSpot = 0;
+            //TODO: testa
+            do
             {
                 Console.WriteLine("Använd ett tal mellan 1 och 100");
-                nextSpot = GetResponseAsNumber("Which spot do you want to move the vehicle to?");
-                nextSpot--;
-            }
+                nextSpot  = GetResponseAsNumber("Which spot do you want to move the vehicle to?");
+                
+            } while (nextSpot < 0 && nextSpot >= 99);
             for (int i = 0; i < myVehicles.Length; i++)
             {
                 if (myVehicles[nextSpot].Contains("Ledig") && myVehicles[index].Contains("CAR"))
@@ -276,9 +292,14 @@ namespace Prague_Parking
                     myVehicles[nextSpot] = myVehicles[index];
                     myVehicles[index] = "Ledig";
                 }
+                else if(myVehicles[nextSpot].Contains("Ledig") && myVehicles[index].Contains("MC ") && FoundTwoMatches(myVehicles[index]) == false)
+                {
+                    myVehicles[nextSpot] = myVehicles[index];
+                    myVehicles[index] = "Ledig";
+                }
                 else if (myVehicles[nextSpot].Contains("Ledig") && myVehicles[index].Contains("MC "))
                 {
-
+                    
                 }
             }
         }
@@ -409,8 +430,6 @@ namespace Prague_Parking
                     Vehicles[i] = "Ledig";
                 }
             }
-
-
         }
         static void Help()
         {
@@ -440,6 +459,7 @@ namespace Prague_Parking
                            | [4] Exit                                  |
                            |                                           |
                            |___________________________________________|";
+            Console.WriteLine(help);
         }
     }
 }

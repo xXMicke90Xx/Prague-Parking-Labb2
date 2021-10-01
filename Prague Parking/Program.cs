@@ -282,28 +282,91 @@ namespace Prague_Parking
                 }
             }
         }
-
+        //---------------------------------Ska användas för att checka ut bil----------------------------------------------------------------
         static void CheckOut(string[] vehicles)
         {
             ConsoleKeyInfo cki;
-            cki = Console.ReadKey(true);
+
             Console.Write("Please enter the registration number of the car you wish to check out: ");
             Console.WriteLine();
             string isValidCaracter = "";
-            while (true)
+            bool userDone = false;
+            while (userDone == false)
             {
+                ;
                 cki = Console.ReadKey(true);
-                if (char.IsLetterOrDigit(cki.KeyChar))
+
+
+                switch (cki.Key)
                 {
-                    isValidCaracter += cki.KeyChar;
+                   
+
+                    case ConsoleKey.Enter:
+                        {
+                            userDone = true;
+                            break;
+                        }
+                    case ConsoleKey.Escape:
+                        {
+                            userDone = true;
+                            break;
+                        }
+                    case ConsoleKey.Backspace:
+                        {
+                            if (isValidCaracter.Length < 1)
+                                break;
+                            else
+                            {
+                                Console.Clear();
+
+                                PrintColumnsOfVehicles(myVehicles);
+                                MainMenu();
+
+                                isValidCaracter = isValidCaracter.Remove(isValidCaracter.Length - 1);
+                                Console.WriteLine("test\n\n\n");
+                                Console.WriteLine("Please enter the registration number of the car you wish to check out: ");
+                                Console.Write($"Registration number: {isValidCaracter}");
+                                PrintSearchResult(isValidCaracter.ToUpper(), myVehicles);
+
+                                break;
+                            }
+                        }
+                    case ConsoleKey.UpArrow:
+                        {
+                            break;
+                        }
+
+                    case ConsoleKey.DownArrow:
+                        {
+                            break;
+                        }
+                    default:
+                        {
+                            if (char.IsLetterOrDigit(cki.KeyChar))
+                            {
+                                Console.Clear();
+                                PrintColumnsOfVehicles(myVehicles);
+                                MainMenu();
+                                Console.WriteLine("test\n\n\n");
+                                Console.WriteLine("Please enter the registration number of the car you wish to check out: ");
+                                isValidCaracter += cki.KeyChar;
+                                Console.Write($"Registration number: {isValidCaracter}");
+                                PrintSearchResult(isValidCaracter.ToUpper(), myVehicles);
+                                
+                            }
+                            break;
+
+                        }
                 }
 
 
 
-                Console.Write(isValidCaracter);
+
+
 
 
             }
+            Console.Clear();
 
 
 
@@ -312,12 +375,31 @@ namespace Prague_Parking
 
 
         }
+        //-----------------------------------Söker Lista efter Regnummer---------------------------------------
+        static void PrintSearchResult(string toCheck, string[] listOfVehicles)
+        {
+            string[] foundVehicles = new string[listOfVehicles.Length];
+            
+            for (int i = 0; i < listOfVehicles.Length; i++)
+            {
+                if (listOfVehicles[i].Contains(toCheck) && listOfVehicles[i] != "Ledig")
+                {
+
+                    
+                    Console.WriteLine(listOfVehicles[i]);
+
+
+                }
+
+            }
+        }
 
 
 
 
 
 
+        //-------------------------------Fyller i alla platser med ett standardvärde--------------------------------
         static void FillNullSpaces(string[] Vehicles)
         {
             for (int i = 0; i < Vehicles.Length; i++)

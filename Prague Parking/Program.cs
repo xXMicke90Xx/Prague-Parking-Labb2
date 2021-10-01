@@ -323,7 +323,7 @@ namespace Prague_Parking
                                 MainMenu();
 
                                 isValidCaracter = isValidCaracter.Remove(isValidCaracter.Length - 1);
-                                Console.WriteLine("test\n\n\n");
+                                Console.WriteLine("\n\n");
                                 Console.WriteLine("Please enter the registration number of the car you wish to check out: ");
                                 Console.Write($"Registration number: {isValidCaracter}");
                                 PrintSearchResult(isValidCaracter.ToUpper(), myVehicles);
@@ -347,7 +347,7 @@ namespace Prague_Parking
                                 Console.Clear();
                                 PrintColumnsOfVehicles(myVehicles);
                                 MainMenu();
-                                Console.WriteLine("test\n\n\n");
+                                Console.WriteLine("\n\n");
                                 Console.WriteLine("Please enter the registration number of the car you wish to check out: ");
                                 isValidCaracter += cki.KeyChar;
                                 Console.Write($"Registration number: {isValidCaracter}");

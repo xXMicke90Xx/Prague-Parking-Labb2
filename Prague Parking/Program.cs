@@ -11,7 +11,7 @@ namespace Prague_Parking
         public static string[] myVehicles = new string[100];
         static void Main(string[] args)
         {
-
+            
             Console.WindowWidth = 240;
             Console.WindowHeight = 63;
             FillNullSpaces(myVehicles);
@@ -327,7 +327,7 @@ namespace Prague_Parking
 
             Console.Write("Please enter the registration number of the car you wish to check out: ");
             Console.WriteLine();
-            string isValidCaracter = "";
+            string RegSearch = "";
             bool userDone = false;
             while (userDone == false)
             {
@@ -351,24 +351,24 @@ namespace Prague_Parking
                         }
                     case ConsoleKey.Backspace:
                         {
-                            if (isValidCaracter.Length < 1)
+                            if (RegSearch.Length < 1)
                                 break;
                             else
                             {
                                 var position = Console.CursorTop;
                                 Console.SetCursorPosition(0, position);
                                 CleanScreen(0, position);
-                             
-                                isValidCaracter = isValidCaracter.Remove(isValidCaracter.Length - 1);
+                               
+                                RegSearch = RegSearch.Remove(RegSearch.Length - 1);
                                 Console.WriteLine("\n\n");
                                 Console.WriteLine("Please enter the registration number of the car you wish to check out: ");
                                
                                
                                 
                                 
-                                Console.Write($"Registration number: {isValidCaracter}");
+                                Console.Write($"Registration number: {RegSearch}");
 
-                                PrintSearchResult(isValidCaracter.ToUpper(), myVehicles);
+                                PrintSearchResult(RegSearch.ToUpper(), myVehicles);
                                 break;
                             }
                         }
@@ -385,14 +385,15 @@ namespace Prague_Parking
                         {
                             if (char.IsLetterOrDigit(cki.KeyChar))
                             {
-                                Console.Clear();
-                                PrintColumnsOfVehicles(myVehicles);
-                                MainMenu();
+                                var position = Console.CursorTop;
+                                Console.SetCursorPosition(0, position);
+                                CleanScreen(0, position);
+                                
                                 Console.WriteLine("\n\n");
                                 Console.WriteLine("Please enter the registration number of the car you wish to check out: ");
-                                isValidCaracter += cki.KeyChar;
-                                Console.Write($"Registration number: {isValidCaracter}");
-                                PrintSearchResult(isValidCaracter.ToUpper(), myVehicles);
+                                RegSearch += cki.KeyChar;
+                                Console.Write($"Registration number: {RegSearch}");
+                                PrintSearchResult(RegSearch.ToUpper(), myVehicles);
 
                             }
                             break;
@@ -404,10 +405,11 @@ namespace Prague_Parking
             Console.Clear();
 
         }
+        //-------------------------------Ska rensa sökningsfunktionen bara utan att röra resten----------------------------------
         static void CleanScreen(int x, int y)
         {
             Console.SetCursorPosition(0, y-3);
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 10; i++)
             {
                 Console.Write(new string (' ', Console.WindowWidth));
             }
@@ -417,13 +419,18 @@ namespace Prague_Parking
         //-----------------------------------Söker Lista efter Regnummer---------------------------------------
         static void PrintSearchResult(string toCheck, string[] listOfVehicles)
         {
+            int x = 200;
+            int y = 43;
             string[] foundVehicles = new string[listOfVehicles.Length];
-
+           
             for (int i = 0; i < listOfVehicles.Length; i++)
             {
                 if (listOfVehicles[i].Contains(toCheck) && listOfVehicles[i] != "Ledig")
                 {
-                    Console.WriteLine(listOfVehicles[i]);
+                    Console.SetCursorPosition(x, y);
+                    Console.Write(listOfVehicles[i]);
+                    y++;
+                    
                 }
             }
         }

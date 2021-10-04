@@ -355,15 +355,19 @@ namespace Prague_Parking
                                 break;
                             else
                             {
-                                Console.Clear();
-
-                                PrintColumnsOfVehicles(myVehicles);
-                                MainMenu();
-
+                                var position = Console.CursorTop;
+                                Console.SetCursorPosition(0, position);
+                                CleanScreen(0, position);
+                             
                                 isValidCaracter = isValidCaracter.Remove(isValidCaracter.Length - 1);
                                 Console.WriteLine("\n\n");
                                 Console.WriteLine("Please enter the registration number of the car you wish to check out: ");
+                               
+                               
+                                
+                                
                                 Console.Write($"Registration number: {isValidCaracter}");
+
                                 PrintSearchResult(isValidCaracter.ToUpper(), myVehicles);
                                 break;
                             }
@@ -399,6 +403,16 @@ namespace Prague_Parking
             }
             Console.Clear();
 
+        }
+        static void CleanScreen(int x, int y)
+        {
+            Console.SetCursorPosition(0, y-3);
+            for (int i = 0; i < 4; i++)
+            {
+                Console.Write(new string (' ', Console.WindowWidth));
+            }
+            Console.SetCursorPosition(0, y - 4);
+            
         }
         //-----------------------------------Söker Lista efter Regnummer---------------------------------------
         static void PrintSearchResult(string toCheck, string[] listOfVehicles)

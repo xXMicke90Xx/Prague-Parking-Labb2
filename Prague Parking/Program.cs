@@ -9,6 +9,8 @@ namespace Prague_Parking
     {
 
         public static string[] myVehicles = new string[100];
+
+
         static void Main(string[] args)
         {
 
@@ -260,8 +262,12 @@ namespace Prague_Parking
         }
         static void MoveCar()
         {
+
+
             string searchForRegistration = GetResponse("Which registration number do you want to move?");
             searchForRegistration = searchForRegistration.ToUpper();
+
+            //TODO bryta ut till en sökfunktion
             bool isFound = false;
             int index = 0;
             for (int i = 0; i < myVehicles.Length; i++)
@@ -277,7 +283,7 @@ namespace Prague_Parking
 
 
             int nextSpot = 0;
-            //TODO: testa
+            //TODO: testa && bryta ut i en funktion
             if (isFound == true)
             {
                 do

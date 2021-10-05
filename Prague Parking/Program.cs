@@ -40,7 +40,7 @@ namespace Prague_Parking
                     CheckIn();
                     break;
                 case "2":
-                    MoveCar();
+                    MoveVehicle();
                     break;
                 case "3":
                     CheckOut(myVehicles);
@@ -260,7 +260,7 @@ namespace Prague_Parking
                 isFound = false;
             return isFound;
         }
-        static void MoveCar()
+        static void MoveVehicle()
         {
 
 

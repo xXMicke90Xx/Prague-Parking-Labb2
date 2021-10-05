@@ -148,6 +148,7 @@ namespace Prague_Parking
 
         //TODO: kolla så regnummer inte redan finns i listan
         //TODO: kolla så regnummer inte matas in med fel tecken
+        #region CheckIn and helper functions to that
         static void CheckIn()
         {
 
@@ -209,6 +210,8 @@ namespace Prague_Parking
                 }
             }
         }
+
+        #endregion
 
         //TODO fixa logiken
         private static string EnterRegistration(string registrationNumber)
@@ -340,18 +343,20 @@ namespace Prague_Parking
                 else if(!myVehicles[nextSpot].Contains("Ledig") && myVehicles[index].Contains("MC ") && FoundTwoMatches(myVehicles[nextSpot]) == false)
                 {
                     string[] tempHolder = myVehicles[index].Split("|");
+                    
                     if (tempHolder[0].Contains(searchForRegistration))
                     {
+
                         myVehicles[nextSpot] += "|";
                         myVehicles[nextSpot] += tempHolder[0];
-                        myVehicles[index] = tempHolder[1];
+                        myVehicles[index] = "Ledig";
                         break;
                     }
                     else if (tempHolder[1].Contains(searchForRegistration))
                     {
                         myVehicles[nextSpot] += "|";
                         myVehicles[nextSpot] += tempHolder[1];
-                        myVehicles[index] = tempHolder[0];
+                        myVehicles[index] = "Ledig";
                         break;
                     }
                 }

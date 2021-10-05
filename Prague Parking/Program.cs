@@ -320,9 +320,40 @@ namespace Prague_Parking
                 //om två motorcyklar finns finns
                 else if (myVehicles[nextSpot].Contains("Ledig") && myVehicles[index].Contains("MC ") && FoundTwoMatches(myVehicles[index]) == true)
                 {
-                    //myVehicles[nextSpot] = myVehicles[index];
-                    //myVehicles[index] = "Ledig";
+                    string[] tempHolder = myVehicles[index].Split("|");
+                    if (tempHolder[0].Contains(searchForRegistration))
+                    {
+                        
+                        myVehicles[nextSpot] = tempHolder[0];
+                        myVehicles[index] = tempHolder[1];
+                        break;
+                    }
+                    else if (tempHolder[1].Contains(searchForRegistration))
+                    {
+                        
+                        myVehicles[nextSpot] = tempHolder[1];
+                        myVehicles[index] = tempHolder[0];
+                        break;
+                    }
 
+                }
+                else if(!myVehicles[nextSpot].Contains("Ledig") && myVehicles[index].Contains("MC ") && FoundTwoMatches(myVehicles[nextSpot]) == false)
+                {
+                    string[] tempHolder = myVehicles[index].Split("|");
+                    if (tempHolder[0].Contains(searchForRegistration))
+                    {
+                        myVehicles[nextSpot] += "|";
+                        myVehicles[nextSpot] += tempHolder[0];
+                        myVehicles[index] = tempHolder[1];
+                        break;
+                    }
+                    else if (tempHolder[1].Contains(searchForRegistration))
+                    {
+                        myVehicles[nextSpot] += "|";
+                        myVehicles[nextSpot] += tempHolder[1];
+                        myVehicles[index] = tempHolder[0];
+                        break;
+                    }
                 }
             }
         }

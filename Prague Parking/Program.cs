@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Text;
 using System.Threading;
 using System.Text.RegularExpressions;
 
@@ -16,12 +15,12 @@ namespace Prague_Parking
         {
             WindowSetup();
             
-            FillNullSpaces(myVehicles);
-            //PrintColumnsOfVehicles(myVehicles);
+            FillNullSpaces();
+            
             string input = "";
             while (input != "6")
             {
-                PrintColumnsOfVehicles(myVehicles);
+                PrintColumnsOfVehicles();
                 MainMenu();
                 input = GetResponse("Please enter a choice 1-4, or 5 to exit: ");
                 MainMenyChoice(input);
@@ -114,7 +113,7 @@ namespace Prague_Parking
             }
         }
         //----------------------- Skriver ut kolummer med alla platser som finns i myCars arrayen---------------------------------------
-        static void PrintColumnsOfVehicles(string[] cars)
+        static void PrintColumnsOfVehicles()
         {
 
 
@@ -125,17 +124,17 @@ namespace Prague_Parking
             {
                 Console.Write("          ");
                  //Skriver ut 1-25                           
-                ColorMatch(cars[i]);
-                Console.Write($"{(i < 9 ? "|" + (i + 1) + " " : "|" + (i + 1))} {cars[i].PadRight((Console.WindowWidth / 3) - 19)}|");
+                ColorMatch(myVehicles[i]);
+                Console.Write($"{(i < 9 ? "|" + (i + 1) + " " : "|" + (i + 1))} {myVehicles[i].PadRight((Console.WindowWidth / 3) - 19)}|");
                 //Skriver ut 26 - 50
-                ColorMatch(cars[i + cars.Length / 4]);
-                Console.Write($"{i + cars.Length / 4 + 1} {cars[i + cars.Length / 4].PadRight((Console.WindowWidth / 3) - 19)}|");
+                ColorMatch(myVehicles[i + myVehicles.Length / 4]);
+                Console.Write($"{i + myVehicles.Length / 4 + 1} {myVehicles[i + myVehicles.Length / 4].PadRight((Console.WindowWidth / 3) - 19)}|");
                 //skriver ut 51- 75
-                ColorMatch(cars[i + cars.Length / 2]);
-                Console.Write($"{i + cars.Length / 2 + 1} {cars[i + cars.Length / 2].PadRight((Console.WindowWidth / 3) - 19)}|");
+                ColorMatch(myVehicles[i + myVehicles.Length / 2]);
+                Console.Write($"{i + myVehicles.Length / 2 + 1} {myVehicles[i + myVehicles.Length / 2].PadRight((Console.WindowWidth / 3) - 19)}|");
                 //Skriver ut 76 - 100
-                ColorMatch(cars[i + (cars.Length / 4) * 3]);
-                Console.Write($"{i + ((cars.Length / 4) * 3) + 1}{(i == 24 ? "" : " ")} {cars[i + (cars.Length / 4) * 3]}|");
+                ColorMatch(myVehicles[i + (myVehicles.Length / 4) * 3]);
+                Console.Write($"{i + ((myVehicles.Length / 4) * 3) + 1}{(i == 24 ? "" : " ")} {myVehicles[i + (myVehicles.Length / 4) * 3]}|");
 
                 Console.WriteLine();
 
@@ -401,7 +400,23 @@ namespace Prague_Parking
 
             return isFound;
         }
+        static void CheckoutMessage(int index) 
+        {
+            DateTime checkOutTime = DateTime.Now;
+            string lol = myVehicles[index].Substring(myVehicles[index].Length - 6);
+            string checkOutMessage = $@"___________________________________________
+                                       |               Titel: Help                 |
+                                       |                                           |
+                                       |  The Vehicle is located at ParkingSpace   |
+                                       |                 {index+1}                 |
+                                       |    It has been parked for a total of      |
+                                       |               {checkOutTime.Hour}                            |
+                                       |                                           |
+                                       |___________________________________________|";
 
+
+
+        }
         //---------------------------------Ska användas för att checka ut bil-----------------------------------------------------------
         static void CheckOut()
         {
@@ -431,6 +446,7 @@ namespace Prague_Parking
                                 cki = Console.ReadKey(true);
                                 if (cki.Key == ConsoleKey.Enter )
                                 {
+                                    CheckoutMessage(savedIndex);
 
                                     if ((FoundTwoMatches(myVehicles[savedIndex]) == true && myVehicles[savedIndex].Substring(0, myVehicles[savedIndex].IndexOf('|')).Contains(RegSearch.ToUpper())) ||
                                        (FoundTwoMatches(myVehicles[savedIndex]) == true && myVehicles[savedIndex].Substring(myVehicles[savedIndex].IndexOf("|"), 10).Contains(RegSearch.ToUpper())))
@@ -686,13 +702,13 @@ namespace Prague_Parking
         }
 
         //-------------------------------Fyller i alla platser med ett standardvärde--------------------------------
-        static void FillNullSpaces(string[] Vehicles)
+        static void FillNullSpaces()
         {
-            for (int i = 0; i < Vehicles.Length; i++)
+            for (int i = 0; i < myVehicles.Length; i++)
             {
-                if (Vehicles[i] == null)
+                if (myVehicles[i] == null)
                 {
-                    Vehicles[i] = "Ledig";
+                    myVehicles[i] = "Ledig";
                 }
             }
         }

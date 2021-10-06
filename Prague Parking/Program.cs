@@ -44,14 +44,15 @@ namespace Prague_Parking
                                           |        Please put window        |
                                           |          in Fullscreen          |            
                                           |              (F11)              |
-                                          |                                 |    
+                                          |          Press Enter            |    
                                           |                                 |
                                           ___________________________________";
-            
+            Console.SetCursorPosition(Console.WindowWidth / 2 - 16, Console.WindowHeight / 2 - 4);
+            Console.WriteLine(setupWindowMessage);
             while (Console.WindowWidth < 200 && Console.WindowTop < 50)
             {
-                Console.SetCursorPosition(Console.WindowWidth / 2 - 16, Console.WindowHeight / 2 - 4);
-                Console.WriteLine(setupWindowMessage);
+               
+                
             }
             Console.Clear();
             Console.SetCursorPosition(0, 0);

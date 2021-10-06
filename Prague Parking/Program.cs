@@ -396,36 +396,42 @@ namespace Prague_Parking
 
                     case ConsoleKey.Enter:
                         {
-                            Console.WriteLine("Are you sure you want to remove the vehicle? Then press enter" );
-                            cki = Console.ReadKey(true);
-                            if (cki.Key == ConsoleKey.Enter)
+                            if (RegSearch.Length > 0)
                             {
-                                if (FoundTwoMatches(myVehicles[savedIndex]) == true  && myVehicles[savedIndex].Substring(3, 7).Contains(RegSearch.ToUpper()) &&
-                                    myVehicles[savedIndex].Substring(myVehicles[savedIndex].IndexOf("|"), 10).Contains(RegSearch.ToUpper()))
+                                Console.WriteLine("Are you sure you want to remove the vehicle? Then press enter");
+                                cki = Console.ReadKey(true);
+                                if (cki.Key == ConsoleKey.Enter)
                                 {
-                                    myVehicles[savedIndex] = ChoseMC(myVehicles, savedIndex, cki);
-                                   
-                                    
+                                    if (FoundTwoMatches(myVehicles[savedIndex]) == true && myVehicles[savedIndex].Substring(0, myVehicles[savedIndex].IndexOf('|')).Contains(RegSearch.ToUpper()) &&
+                                        myVehicles[savedIndex].Substring(myVehicles[savedIndex].IndexOf("|"), 10).Contains(RegSearch.ToUpper()))
 
-                                  
-                                    userDone = true;
+                                    {
+                                        myVehicles[savedIndex] = ChoseMC(myVehicles, savedIndex, cki);
+                                        userDone = true;
+                                    }
+                                    else if (myVehicles[savedIndex].Substring(0, 3) == "CAR")
+                                    {
+                                        myVehicles[savedIndex] = "Ledig";
+                                        userDone = true;
+
+                                    }
+                                    else
+                                        break;
+
+                                    break;
                                 }
                                 else
                                 {
-                                    myVehicles[savedIndex] = "Ledig";
-                                    userDone = true;
-
+                                    break;
                                 }
-                               
-                                break;
+
+
                             }
-                            else
                             {
                                 break;
                             }
-                            
-                            
                         }
+                        
                     case ConsoleKey.Escape:
                         {
                             userDone = true;
@@ -450,20 +456,12 @@ namespace Prague_Parking
 
                                 Console.Write($"Registration number: {RegSearch}");
 
-                                savedIndex = PrintSearchResult(RegSearch.ToUpper(), myVehicles);
+                                savedIndex = PrintSearchResult(RegSearch.ToUpper());
                                 Console.SetCursorPosition(0, position);
                                 break;
                             }
                         }
-                    case ConsoleKey.UpArrow:
-                        {
-                            break;
-                        }
-
-                    case ConsoleKey.DownArrow:
-                        {
-                            break;
-                        }
+                   
                     default:
                         {
                             if (char.IsLetterOrDigit(cki.KeyChar))
@@ -476,7 +474,7 @@ namespace Prague_Parking
                                 Console.WriteLine("Please enter the registration number of the car you wish to check out: ");
                                 RegSearch += cki.KeyChar;
                                 Console.Write($"Registration number: {RegSearch}");
-                                savedIndex = PrintSearchResult(RegSearch.ToUpper(), myVehicles);
+                                savedIndex = PrintSearchResult(RegSearch.ToUpper());
                                 Console.SetCursorPosition(0, position);
 
                             }
@@ -591,22 +589,22 @@ namespace Prague_Parking
 
         }
         //-----------------------------------Söker Lista efter Regnummer---------------------------------------
-        static int PrintSearchResult(string toCheck, string[] listOfVehicles)
+        static int PrintSearchResult(string toCheck)
         {
             int x = (Console.WindowWidth / 4) * 3;
             int y = 43;
             bool firstMatch = false;
             int numberOfMatches = 0;
             int savedindex = 0;
-            for (int i = 0; i < listOfVehicles.Length; i++)
+            for (int i = 0; i < myVehicles.Length; i++)
             {
-                if (listOfVehicles[i].Contains(toCheck) && listOfVehicles[i] != "Ledig" && numberOfMatches < 10)
+                if (myVehicles[i].Contains(toCheck) && myVehicles[i] != "Ledig" && numberOfMatches < 10)
                 {
                     if (firstMatch == false)
                     {
                         Console.SetCursorPosition(x, y);
                         Console.BackgroundColor = ConsoleColor.DarkGray;
-                        Console.Write(listOfVehicles[i], Console.ForegroundColor = ConsoleColor.Cyan);
+                        Console.Write(myVehicles[i], Console.ForegroundColor = ConsoleColor.Cyan);
                         Console.ResetColor();
                         y++;
                         firstMatch = true;
@@ -616,7 +614,7 @@ namespace Prague_Parking
                     else
                     {
                         Console.SetCursorPosition(x, y);
-                        Console.Write(listOfVehicles[i]);
+                        Console.Write(myVehicles[i]);
                         y++;
                         numberOfMatches++;
 

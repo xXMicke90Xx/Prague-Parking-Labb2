@@ -9,9 +9,12 @@ namespace Prague_Parking
     {
 
         public static string[] myVehicles = new string[100];
+        public static int index = 0;
+        public static int nextSpot = 0;
+
         static void Main(string[] args)
         {
-            
+
             Console.WindowWidth = 240;
             Console.WindowHeight = 63;
             FillNullSpaces(myVehicles);
@@ -38,7 +41,7 @@ namespace Prague_Parking
                     CheckIn();
                     break;
                 case "2":
-                    MoveCar();
+                    MoveVehicle(index, nextSpot);
                     break;
                 case "3":
                     CheckOut(myVehicles);
@@ -73,8 +76,6 @@ namespace Prague_Parking
                 "|                                           |",
                 "|                                           |",
                 "_____________________________________________"};
-
-
 
 
             for (int i = 0; i < menu.Length; i++)
@@ -126,7 +127,7 @@ namespace Prague_Parking
             Console.WriteLine();
             return choice;
         }
-        static int GetResponseAsNumber(string message)
+        static int GetResponseAsNumber(string message,ref int index)
         {
             Console.SetCursorPosition((Console.WindowWidth - message.Length) / 2 - 1, Console.CursorTop);
             Console.WriteLine(message);
@@ -135,10 +136,14 @@ namespace Prague_Parking
 
             result--;
             if (result < 0)
-                result = 0;
+            {
+                result = index; 
+            }
             //TODO: behåll samma index
             else if (result > 99)
-                result = 0;
+            {
+                result = index;
+            }
             return result;
         }
         // -------------------------Sak ta emot och lagra vart bilar på tillgänglig plats--------------------------
@@ -146,6 +151,7 @@ namespace Prague_Parking
 
         //TODO: kolla så regnummer inte redan finns i listan
         //TODO: kolla så regnummer inte matas in med fel tecken
+        #region CheckIn and helper functions to that
         static void CheckIn()
         {
 
@@ -182,17 +188,17 @@ namespace Prague_Parking
 
         private static void VehicleAtCorrectPosition(string vehicleType, string registrationNumber, DateTime timeCheckedIn)
         {
-            string final = $"{ vehicleType}#{registrationNumber}#{timeCheckedIn.ToString("MMM-dd HH:mm")}";
+            string correctFormatedString = $"{ vehicleType}#{registrationNumber}#{timeCheckedIn.ToString("MMM-dd HH:mm")}";
             for (int i = 0; i < myVehicles.Length; i++)
             {
                 if (myVehicles[i] == "Ledig" && vehicleType == "CAR")
                 {
-                    myVehicles[i] = final;
+                    myVehicles[i] = correctFormatedString;
                     break;
                 }
                 if (myVehicles[i] == "Ledig" && vehicleType == "MC ")
                 {
-                    myVehicles[i] = final;
+                    myVehicles[i] = correctFormatedString;
                     break;
                 }
                 else if (myVehicles[i].Contains("MC ") && vehicleType == "MC ")
@@ -201,12 +207,14 @@ namespace Prague_Parking
                     if (isTrue != true)
                     {
                         myVehicles[i] += "|";
-                        myVehicles[i] += final;
+                        myVehicles[i] += correctFormatedString;
                         break;
                     }
                 }
             }
         }
+
+        #endregion
 
         //TODO fixa logiken
         private static string EnterRegistration(string registrationNumber)
@@ -258,26 +266,17 @@ namespace Prague_Parking
                 isFound = false;
             return isFound;
         }
-        static void MoveCar()
+        static void MoveVehicle(int index, int nextSpot)
         {
+
+
             string searchForRegistration = GetResponse("Which registration number do you want to move?");
             searchForRegistration = searchForRegistration.ToUpper();
-            bool isFound = false;
-            int index = 0;
-            for (int i = 0; i < myVehicles.Length; i++)
-            {
-                if (myVehicles[i].Contains(searchForRegistration))
-                {
-                    isFound = true;
-                    index = i;
-                }
-            }
+            //söker efter inmatat registreringsnummer
+            bool isFound = SearchForRegistration(ref index, searchForRegistration);
 
 
-
-
-            int nextSpot = 0;
-            //TODO: testa
+            //TODO: testa && bryta ut i en funktion
             if (isFound == true)
             {
                 do
@@ -286,9 +285,9 @@ namespace Prague_Parking
                     Console.WriteLine($"Vehicle found at index {index}");
                     Console.SetCursorPosition((Console.WindowWidth) / 2, Console.CursorTop);
                     Console.WriteLine("Använd ett tal mellan 1 och 100");
-                    nextSpot = GetResponseAsNumber("Which spot do you want to move the vehicle to?");
+                    nextSpot = GetResponseAsNumber("Which spot do you want to move the vehicle to?",ref index);
 
-                } while (nextSpot < 0 && nextSpot >= 99);
+                } while (nextSpot < 0 && nextSpot > 99);
 
             }
             else
@@ -308,18 +307,72 @@ namespace Prague_Parking
                 //om en motorcykel finns
                 else if (myVehicles[nextSpot].Contains("Ledig") && myVehicles[index].Contains("MC ") && FoundTwoMatches(myVehicles[index]) == false)
                 {
+
                     myVehicles[nextSpot] = myVehicles[index];
                     myVehicles[index] = "Ledig";
+
                 }
-                //om två motorcyklar finns finns
+                ////om två motorcyklar finns finns
                 else if (myVehicles[nextSpot].Contains("Ledig") && myVehicles[index].Contains("MC ") && FoundTwoMatches(myVehicles[index]) == true)
                 {
-                    //myVehicles[nextSpot] = myVehicles[index];
-                    //myVehicles[index] = "Ledig";
+                    string[] tempHolder = myVehicles[index].Split("|");
+                    if (tempHolder[0].Contains(searchForRegistration))
+                    {
+                        if (!myVehicles[nextSpot].Contains("CAR"))
+                        {
+                            myVehicles[nextSpot] = tempHolder[0];
+                            myVehicles[index] = tempHolder[1];
+                            break;
+                        }
+                    }
+                    else if (tempHolder[1].Contains(searchForRegistration))
+                    {
+                        if (!myVehicles[nextSpot].Contains("CAR"))
+                        {
+                            myVehicles[nextSpot] = tempHolder[1];
+                            myVehicles[index] = tempHolder[0];
+                            break;
+                        }
+                    }
+                }
+                else if (!myVehicles[nextSpot].Contains("CAR") && myVehicles[index].Contains("MC ") && FoundTwoMatches(myVehicles[nextSpot]) == false)
+                {
+                    string[] tempHolder = myVehicles[index].Split("|");
 
+                    if (tempHolder[0].Contains(searchForRegistration))
+                    {
+                        myVehicles[nextSpot] += "|";
+                        myVehicles[nextSpot] += tempHolder[0];
+                        myVehicles[index] = "Ledig";
+                        break;
+                    }
+                    else if (tempHolder[1].Contains(searchForRegistration))
+                    {
+                        myVehicles[nextSpot] += "|";
+                        myVehicles[nextSpot] += tempHolder[1];
+                        myVehicles[index] = "Ledig";
+                        break;
+                    }
                 }
             }
         }
+
+        private static bool SearchForRegistration(ref int index, string searchForRegistration)
+        {
+            bool isFound = false;
+
+            for (int i = 0; i < myVehicles.Length; i++)
+            {
+                if (myVehicles[i].Contains(searchForRegistration))
+                {
+                    isFound = true;
+                    index = i;
+                }
+            }
+
+            return isFound;
+        }
+
         //---------------------------------Ska användas för att checka ut bil-----------------------------------------------------------
         static void CheckOut(string[] vehicles)
         {
@@ -358,14 +411,14 @@ namespace Prague_Parking
                                 var position = Console.CursorTop;
                                 Console.SetCursorPosition(0, position);
                                 CleanScreen(0, position);
-                               
+
                                 RegSearch = RegSearch.Remove(RegSearch.Length - 1);
                                 Console.WriteLine("\n\n");
                                 Console.WriteLine("Please enter the registration number of the car you wish to check out: ");
-                               
-                               
-                                
-                                
+
+
+
+
                                 Console.Write($"Registration number: {RegSearch}");
 
                                 PrintSearchResult(RegSearch.ToUpper(), myVehicles);
@@ -388,7 +441,7 @@ namespace Prague_Parking
                                 var position = Console.CursorTop;
                                 Console.SetCursorPosition(0, position);
                                 CleanScreen(0, position);
-                                
+
                                 Console.WriteLine("\n\n");
                                 Console.WriteLine("Please enter the registration number of the car you wish to check out: ");
                                 RegSearch += cki.KeyChar;
@@ -408,13 +461,13 @@ namespace Prague_Parking
         //-------------------------------Ska rensa sökningsfunktionen bara utan att röra resten----------------------------------
         static void CleanScreen(int x, int y)
         {
-            Console.SetCursorPosition(0, y-3);
+            Console.SetCursorPosition(0, y - 3);
             for (int i = 0; i < 10; i++)
             {
-                Console.Write(new string (' ', Console.WindowWidth));
+                Console.Write(new string(' ', Console.WindowWidth));
             }
             Console.SetCursorPosition(0, y - 4);
-            
+
         }
         //-----------------------------------Söker Lista efter Regnummer---------------------------------------
         static void PrintSearchResult(string toCheck, string[] listOfVehicles)
@@ -422,7 +475,7 @@ namespace Prague_Parking
             int x = 200;
             int y = 43;
             string[] foundVehicles = new string[listOfVehicles.Length];
-           
+
             for (int i = 0; i < listOfVehicles.Length; i++)
             {
                 if (listOfVehicles[i].Contains(toCheck) && listOfVehicles[i] != "Ledig")
@@ -430,7 +483,7 @@ namespace Prague_Parking
                     Console.SetCursorPosition(x, y);
                     Console.Write(listOfVehicles[i]);
                     y++;
-                    
+
                 }
             }
         }

@@ -14,23 +14,47 @@ namespace Prague_Parking
 
         static void Main(string[] args)
         {
-
-            Console.WindowWidth = 240;
-            Console.WindowHeight = 63;
+            WindowSetup();
+            
             FillNullSpaces(myVehicles);
-            PrintColumnsOfVehicles(myVehicles);
+            //PrintColumnsOfVehicles(myVehicles);
             string input = "";
-            while (input != "5")
+            while (input != "6")
             {
-
+                PrintColumnsOfVehicles(myVehicles);
                 MainMenu();
                 input = GetResponse("Please enter a choice 1-4, or 5 to exit: ");
                 MainMenyChoice(input);
                 Console.Clear();
-                PrintColumnsOfVehicles(myVehicles);
+                
             }
 
             Console.ReadLine();
+        }
+
+
+        
+
+
+        static void WindowSetup()
+        {
+            string setupWindowMessage = @"_________________________________
+                                          |                                 |
+                                          |                                 |
+                                          |        Please put window        |
+                                          |          in Fullscreen          |            
+                                          |              (F11)              |
+                                          |                                 |    
+                                          |                                 |
+                                          ___________________________________";
+            
+            while (Console.WindowWidth < 200 && Console.WindowTop < 50)
+            {
+                Console.SetCursorPosition(Console.WindowWidth / 2 - 16, Console.WindowHeight / 2 - 4);
+                Console.WriteLine(setupWindowMessage);
+            }
+            Console.Clear();
+            Console.SetCursorPosition(0, 0);
         }
         //-----------------------Huvudmeny--------------------------------------
         static void MainMenyChoice(string input)
@@ -50,10 +74,15 @@ namespace Prague_Parking
                     Help();
                     break;
                 case "5":
-                    Console.WriteLine("Closing project");
-                    Thread.Sleep(60);
-                    Environment.Exit(0);
+                    //Den ska bara vara break
                     break;
+                case "6":
+                    {
+                        Console.WriteLine("Closing project");
+                        Thread.Sleep(60);
+                        Environment.Exit(0);
+                        break;
+                    }
                 default:
                     Console.WriteLine("Please enter a correct choice");
                     break;
@@ -72,8 +101,8 @@ namespace Prague_Parking
                 "|        [2] Flytta fordon                  |",
                 "|        [3] Checka ut fordon               |",
                 "|        [4] Hjälp                          |",
-                "|        [5] Avsluta                        |",
-                "|                                           |",
+                "|        [5] Reset Window                   |",
+                "|        [6] Avsluta                        |",
                 "|                                           |",
                 "_____________________________________________"};
 
@@ -94,16 +123,16 @@ namespace Prague_Parking
             for (int i = 0; i < 25; i++)
             {
                 Console.Write("          ");
-                //                 1  Ledig                                   | 25                                      |51                                         |76
+                 //Skriver ut 1-25                           
                 ColorMatch(cars[i]);
                 Console.Write($"{(i < 9 ? "|" + (i + 1) + " " : "|" + (i + 1))} {cars[i].PadRight((Console.WindowWidth / 3) - 19)}|");
-
+                //Skriver ut 26 - 50
                 ColorMatch(cars[i + cars.Length / 4]);
                 Console.Write($"{i + cars.Length / 4 + 1} {cars[i + cars.Length / 4].PadRight((Console.WindowWidth / 3) - 19)}|");
-
+                //skriver ut 51- 75
                 ColorMatch(cars[i + cars.Length / 2]);
                 Console.Write($"{i + cars.Length / 2 + 1} {cars[i + cars.Length / 2].PadRight((Console.WindowWidth / 3) - 19)}|");
-
+                //Skriver ut 76 - 100
                 ColorMatch(cars[i + (cars.Length / 4) * 3]);
                 Console.Write($"{i + ((cars.Length / 4) * 3) + 1}{(i == 24 ? "" : " ")} {cars[i + (cars.Length / 4) * 3]}|");
 
@@ -492,13 +521,13 @@ namespace Prague_Parking
 
         }
 
-        private static string ChoseMC(string [] vehicles, int index, ConsoleKeyInfo cki)
+        private static string ChoseMC(string [] removeOneVehicle, int index, ConsoleKeyInfo cki)
         {
             
             Console.WriteLine("Two Vehicles was found in the space, select one to remove");
             bool madeChoice = false;
             int choice = 0;
-            string[] split = vehicles[index].Split("|");
+            string[] split = removeOneVehicle[index].Split("|");
             Console.BackgroundColor = ConsoleColor.DarkGray;
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.Write($"{split[0]}");

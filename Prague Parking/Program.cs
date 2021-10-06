@@ -129,21 +129,19 @@ namespace Prague_Parking
         }
         static int GetResponseAsNumber(string message,ref int index)
         {
-            Console.SetCursorPosition((Console.WindowWidth - message.Length) / 2 - 1, Console.CursorTop);
-            Console.WriteLine(message);
+            Console.Write($"{message} ");
+           
             string choice = Console.ReadLine();
+            Console.SetCursorPosition((Console.WindowWidth - message.Length) / 2 - 1, Console.CursorTop);
             bool isInt = int.TryParse(choice, out int result);
 
             result--;
-            if (result < 0)
+            //sätter resultatet till nuvarande plats om man försöker skriva utanför arrayen
+            if (result < 0 || result > 99)
             {
                 result = index; 
             }
-            //TODO: behåll samma index
-            else if (result > 99)
-            {
-                result = index;
-            }
+           
             return result;
         }
         // -------------------------Sak ta emot och lagra vart bilar på tillgänglig plats--------------------------
@@ -158,6 +156,7 @@ namespace Prague_Parking
             // Console.Clear();
             string vehicleType = "";
             string checkingIn = GetResponse("[1] check in a Car or [2] check in motorcykle ");
+            //bryt ut till egen funktion
             while (checkingIn.Trim() != "1" && checkingIn.Trim() != "2")
             {
                 Console.SetCursorPosition((Console.WindowWidth - checkingIn.Length) / 2 - 1, Console.CursorTop);
@@ -282,9 +281,8 @@ namespace Prague_Parking
                 do
                 {
                     Console.SetCursorPosition((Console.WindowWidth) / 2, Console.CursorTop);
-                    Console.WriteLine($"Vehicle found at index {index}");
-                    Console.SetCursorPosition((Console.WindowWidth) / 2, Console.CursorTop);
                     Console.WriteLine("Använd ett tal mellan 1 och 100");
+                    Console.SetCursorPosition((Console.WindowWidth) / 2, Console.CursorTop);
                     nextSpot = GetResponseAsNumber("Which spot do you want to move the vehicle to?",ref index);
 
                 } while (nextSpot < 0 && nextSpot > 99);

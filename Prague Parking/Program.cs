@@ -44,7 +44,7 @@ namespace Prague_Parking
                     MoveVehicle(index, nextSpot);
                     break;
                 case "3":
-                    CheckOut(myVehicles);
+                    CheckOut();
                     break;
                 case "4":
                     Help();
@@ -375,7 +375,7 @@ namespace Prague_Parking
         }
 
         //---------------------------------Ska användas för att checka ut bil-----------------------------------------------------------
-        static void CheckOut(string[] vehicles)
+        static void CheckOut()
         {
             ConsoleKeyInfo cki;
 
@@ -400,8 +400,23 @@ namespace Prague_Parking
                             cki = Console.ReadKey(true);
                             if (cki.Key == ConsoleKey.Enter)
                             {
-                                myVehicles[savedIndex] = "Ledig";
-                                userDone = true;
+                                if (FoundTwoMatches(myVehicles[savedIndex]) == true  && myVehicles[savedIndex].Substring(3, 7).Contains(RegSearch.ToUpper()) &&
+                                    myVehicles[savedIndex].Substring(myVehicles[savedIndex].IndexOf("|"), 10).Contains(RegSearch.ToUpper()))
+                                {
+                                    myVehicles[savedIndex] = ChoseMC(myVehicles, savedIndex, cki);
+                                   
+                                    
+
+                                  
+                                    userDone = true;
+                                }
+                                else
+                                {
+                                    myVehicles[savedIndex] = "Ledig";
+                                    userDone = true;
+
+                                }
+                               
                                 break;
                             }
                             else
@@ -474,6 +489,95 @@ namespace Prague_Parking
             Console.Clear();
 
         }
+
+        private static string ChoseMC(string [] vehicles, int index, ConsoleKeyInfo cki)
+        {
+            
+            Console.WriteLine("Two Vehicles was found in the space, select one to remove");
+            bool madeChoice = false;
+            int choice = 0;
+            string[] split = vehicles[index].Split("|");
+            Console.BackgroundColor = ConsoleColor.DarkGray;
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.Write($"{split[0]}");
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write(" | ");
+            Console.Write($"{split[1]}");
+            while (madeChoice == false)
+            {
+                cki = Console.ReadKey(true);
+
+                   switch (cki.Key)
+                   {
+                    case ConsoleKey.RightArrow:
+                        {
+                            if (choice != 1)
+                            {
+                                Console.SetCursorPosition(0, Console.CursorTop);
+                                Console.BackgroundColor = ConsoleColor.Black;
+                                Console.ForegroundColor = ConsoleColor.White;
+                                Console.Write($"{split[0]} | ");
+                                Console.BackgroundColor = ConsoleColor.DarkGray;
+                                Console.ForegroundColor = ConsoleColor.Cyan;
+                                
+                                Console.Write($"{split[1]}");
+
+                                choice = 1;
+                                break;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                            
+                        }
+                    case ConsoleKey.LeftArrow:
+                        {
+                            if (choice != 0)
+                            {
+                                Console.SetCursorPosition(0, Console.CursorTop);
+                                Console.BackgroundColor = ConsoleColor.DarkGray;
+                                Console.ForegroundColor = ConsoleColor.Cyan;
+                                Console.Write($"{split[0]}");
+                                Console.BackgroundColor = ConsoleColor.Black;
+                                Console.ForegroundColor = ConsoleColor.White;
+                                Console.Write($" | {split[1]}");
+                                choice = 0;
+                                break;
+                            }
+                            else
+                            {
+                                break;
+                            }
+                           
+                        }
+                    case ConsoleKey.Enter:
+                        {
+                            madeChoice = true;
+                            break;
+                        }
+                    default:
+                        {
+                            break;
+                        }
+                   }
+                
+
+            }
+
+            Console.ResetColor();
+            if (choice == 0)
+            {
+                return split[1];
+            }
+            else
+            {
+                return split[0];
+            }
+
+        }
+
         //-------------------------------Ska rensa sökningsfunktionen bara utan att röra resten----------------------------------
         static void CleanScreen(int y)
         {

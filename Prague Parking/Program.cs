@@ -400,8 +400,9 @@ namespace Prague_Parking
                                 cki = Console.ReadKey(true);
                                 if (cki.Key == ConsoleKey.Enter)
                                 {
-                                    if (FoundTwoMatches(myVehicles[savedIndex]) == true && myVehicles[savedIndex].Substring(0, myVehicles[savedIndex].IndexOf('|')).Contains(RegSearch.ToUpper()) &&
-                                        myVehicles[savedIndex].Substring(myVehicles[savedIndex].IndexOf("|"), 10).Contains(RegSearch.ToUpper()))
+                                    
+                                    if ((FoundTwoMatches(myVehicles[savedIndex]) == true && myVehicles[savedIndex].Substring(0, myVehicles[savedIndex].IndexOf('|')).Contains(RegSearch.ToUpper())) ||
+                                       (FoundTwoMatches(myVehicles[savedIndex]) == true && myVehicles[savedIndex].Substring(myVehicles[savedIndex].IndexOf("|"), 10).Contains(RegSearch.ToUpper())))
 
                                     {
                                         myVehicles[savedIndex] = ChoseMC(myVehicles, savedIndex, cki);
@@ -412,6 +413,11 @@ namespace Prague_Parking
                                         myVehicles[savedIndex] = "Ledig";
                                         userDone = true;
 
+                                    }
+                                    else if (myVehicles[savedIndex].Substring(0,3) == "MC ")
+                                    {
+                                        myVehicles[savedIndex] = "Ledig";
+                                        userDone = true;
                                     }
                                     else
                                         break;

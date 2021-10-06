@@ -408,6 +408,7 @@ namespace Prague_Parking
             ConsoleKeyInfo cki;
 
             Console.Write("Please enter the registration number of the car you wish to check out: ");
+            
             Console.WriteLine();
             string RegSearch = "";
             bool userDone = false;
@@ -424,13 +425,13 @@ namespace Prague_Parking
 
                     case ConsoleKey.Enter:
                         {
-                            if (RegSearch.Length > 0)
+                            if (RegSearch.Length > 0 && savedIndex >= 0)
                             {
                                 Console.WriteLine("Are you sure you want to remove the vehicle? Then press enter");
                                 cki = Console.ReadKey(true);
-                                if (cki.Key == ConsoleKey.Enter)
+                                if (cki.Key == ConsoleKey.Enter )
                                 {
-                                    
+
                                     if ((FoundTwoMatches(myVehicles[savedIndex]) == true && myVehicles[savedIndex].Substring(0, myVehicles[savedIndex].IndexOf('|')).Contains(RegSearch.ToUpper())) ||
                                        (FoundTwoMatches(myVehicles[savedIndex]) == true && myVehicles[savedIndex].Substring(myVehicles[savedIndex].IndexOf("|"), 10).Contains(RegSearch.ToUpper())))
 
@@ -444,26 +445,46 @@ namespace Prague_Parking
                                         userDone = true;
 
                                     }
-                                    else if (myVehicles[savedIndex].Substring(0,3) == "MC ")
+                                    else if (myVehicles[savedIndex].Substring(0, 3) == "MC ")
                                     {
                                         myVehicles[savedIndex] = "Ledig";
                                         userDone = true;
                                     }
                                     else
-                                        break;
+                                    { 
+                                        break; 
+                                    }
 
-                                    break;
+                                    
                                 }
                                 else
                                 {
+                                    var position = Console.CursorTop;
+                                    Console.SetCursorPosition(0, position);
+                                    CleanScreen(position);
+
+
+                                    Console.WriteLine("\n\n");
+                                    Console.WriteLine("Please enter the registration number of the car you wish to check out: ");
+
+
+
+
+                                    Console.Write($"Registration number: {RegSearch}");
+
+                                    
+                                    Console.SetCursorPosition(0, position);
                                     break;
                                 }
 
-
+                                break;
                             }
+                            else
                             {
                                 break;
                             }
+                            
+
                         }
                         
                     case ConsoleKey.Escape:
@@ -501,6 +522,7 @@ namespace Prague_Parking
                             if (char.IsLetterOrDigit(cki.KeyChar))
                             {
                                 var position = Console.CursorTop;
+                                
                                 Console.SetCursorPosition(0, position);
                                 CleanScreen(position);
 

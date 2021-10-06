@@ -286,7 +286,7 @@ namespace Prague_Parking
                     Console.SetCursorPosition((Console.WindowWidth) / 2, Console.CursorTop);
                     nextSpot = GetResponseAsNumber("Which spot do you want to move the vehicle to?",ref index);
 
-                } while (nextSpot < 0 && nextSpot > 99);
+                } while (nextSpot < 0 && nextSpot > 99 || nextSpot == index);
 
             }
             else
@@ -312,7 +312,7 @@ namespace Prague_Parking
 
                 }
                 ////om två motorcyklar finns finns
-                else if (myVehicles[nextSpot].Contains("Ledig") && myVehicles[index].Contains("MC ") && FoundTwoMatches(myVehicles[index]) == true)
+                else if (myVehicles[nextSpot].Contains("Ledig") && myVehicles[index].Contains("MC ") && FoundTwoMatches(myVehicles[index]) == true  )
                 {
                     string[] tempHolder = myVehicles[index].Split("|");
                     if (tempHolder[0].Contains(searchForRegistration))
@@ -337,20 +337,32 @@ namespace Prague_Parking
                 else if (!myVehicles[nextSpot].Contains("CAR") && myVehicles[index].Contains("MC ") && FoundTwoMatches(myVehicles[nextSpot]) == false)
                 {
                     string[] tempHolder = myVehicles[index].Split("|");
+                   // string[] holderForRegnumbers = tempHolder[0].Split("#");
+                   // string[] secondHolder = tempHolder[1].Split("#");
+
+                    
 
                     if (tempHolder[0].Contains(searchForRegistration))
                     {
-                        myVehicles[nextSpot] += "|";
-                        myVehicles[nextSpot] += tempHolder[0];
-                        myVehicles[index] = "Ledig";
-                        break;
+                        
+                        
+                            myVehicles[nextSpot] += "|";
+                            myVehicles[nextSpot] += tempHolder[0];
+                            myVehicles[index] = "Ledig";
+                            break;
+                        
+                        
                     }
                     else if (tempHolder[1].Contains(searchForRegistration))
                     {
-                        myVehicles[nextSpot] += "|";
-                        myVehicles[nextSpot] += tempHolder[1];
-                        myVehicles[index] = "Ledig";
-                        break;
+                       
+                        
+                            myVehicles[nextSpot] += "|";
+                            myVehicles[nextSpot] += tempHolder[1];
+                            myVehicles[index] = "Ledig";
+                            break;
+                        
+                      
                     }
                 }
             }

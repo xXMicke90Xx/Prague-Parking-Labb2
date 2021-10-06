@@ -93,7 +93,7 @@ namespace Prague_Parking
             for (int i = 0; i < 25; i++)
             {
                 Console.Write("          ");
-
+                //                 1  Ledig                                   | 25                                      |51                                         |76
                 ColorMatch(cars[i]);
                 Console.Write($"{(i < 9 ? "|" + (i + 1) + " " : "|" + (i + 1))} {cars[i].PadRight((Console.WindowWidth / 3) - 19)}|");
 
@@ -104,7 +104,7 @@ namespace Prague_Parking
                 Console.Write($"{i + cars.Length / 2 + 1} {cars[i + cars.Length / 2].PadRight((Console.WindowWidth / 3) - 19)}|");
 
                 ColorMatch(cars[i + (cars.Length / 4) * 3]);
-                Console.Write($"{i + (cars.Length / 4) * 3 + 1}{(i == 24 ? "" : " ")} {cars[i + (cars.Length / 4) * 3]}|");
+                Console.Write($"{i + ((cars.Length / 4) * 3) + 1}{(i == 24 ? "" : " ")} {cars[i + (cars.Length / 4) * 3]}|");
 
                 Console.WriteLine();
 

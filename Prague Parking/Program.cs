@@ -22,7 +22,7 @@ namespace Prague_Parking
             {
                 PrintColumnsOfVehicles();
                 MainMenu();
-                input = GetResponse("Please enter a choice 1-4, or 5 to exit: ");
+                input = GetResponse("Please enter a choice 1-5, or 6 to exit: ");
                 MainMenyChoice(input);
                 Console.Clear();
             }
@@ -158,6 +158,22 @@ namespace Prague_Parking
             {
                 Console.ForegroundColor = ConsoleColor.Green;
             }
+        }
+        static void ColorMatch(byte colorChange)
+        {
+            if (colorChange == 0) 
+            {
+                Console.BackgroundColor = ConsoleColor.DarkGray;
+                Console.ForegroundColor = ConsoleColor.Cyan;
+            }
+            else if (colorChange == 1)
+            {
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            
+            
+            
         }
 
         #endregion
@@ -460,13 +476,13 @@ namespace Prague_Parking
                                 cki = Console.ReadKey(true);
                                 if (cki.Key == ConsoleKey.Enter)
                                 {
-                                    CheckoutMessage(savedIndex);
+                                    
 
                                     if ((FoundTwoMatches(myVehicles[savedIndex]) == true && myVehicles[savedIndex].Substring(0, myVehicles[savedIndex].IndexOf('|')).Contains(RegSearch.ToUpper())) ||
                                        (FoundTwoMatches(myVehicles[savedIndex]) == true && myVehicles[savedIndex].Substring(myVehicles[savedIndex].IndexOf("|"), 10).Contains(RegSearch.ToUpper())))
 
                                     {
-                                        myVehicles[savedIndex] = ChoseMC(myVehicles, savedIndex, cki);
+                                        myVehicles[savedIndex] = ChoseMC(savedIndex, cki);
                                         userDone = true;
                                     }
                                     else if (myVehicles[savedIndex].Substring(0, 3) == "CAR")
@@ -485,7 +501,7 @@ namespace Prague_Parking
                                         break;
                                     }
 
-
+                                    CheckoutMessage(savedIndex);
                                 }
                                 else
                                 {
@@ -563,19 +579,17 @@ namespace Prague_Parking
             }
             Console.Clear();
         }
-
-        private static string ChoseMC(string[] removeOneVehicle, int index, ConsoleKeyInfo cki)
+        
+        private static string ChoseMC(int index, ConsoleKeyInfo cki)
         {
 
             Console.WriteLine("Two Vehicles was found in the space, select one to remove");
             bool madeChoice = false;
-            int choice = 0;
-            string[] split = removeOneVehicle[index].Split("|");
-            Console.BackgroundColor = ConsoleColor.DarkGray;
-            Console.ForegroundColor = ConsoleColor.Cyan;
+            byte choice = 0;
+            string[] split = myVehicles[index].Split("|");
+            ColorMatch(0);
             Console.Write($"{split[0]}");
-            Console.BackgroundColor = ConsoleColor.Black;
-            Console.ForegroundColor = ConsoleColor.White;
+            ColorMatch(1);
             Console.Write(" | ");
             Console.Write($"{split[1]}");
             while (madeChoice == false)
@@ -589,11 +603,9 @@ namespace Prague_Parking
                             if (choice != 1)
                             {
                                 Console.SetCursorPosition(0, Console.CursorTop);
-                                Console.BackgroundColor = ConsoleColor.Black;
-                                Console.ForegroundColor = ConsoleColor.White;
+                                ColorMatch(1);
                                 Console.Write($"{split[0]} | ");
-                                Console.BackgroundColor = ConsoleColor.DarkGray;
-                                Console.ForegroundColor = ConsoleColor.Cyan;
+                                ColorMatch(0);
 
                                 Console.Write($"{split[1]}");
 
@@ -611,11 +623,9 @@ namespace Prague_Parking
                             if (choice != 0)
                             {
                                 Console.SetCursorPosition(0, Console.CursorTop);
-                                Console.BackgroundColor = ConsoleColor.DarkGray;
-                                Console.ForegroundColor = ConsoleColor.Cyan;
+                                ColorMatch(0);
                                 Console.Write($"{split[0]}");
-                                Console.BackgroundColor = ConsoleColor.Black;
-                                Console.ForegroundColor = ConsoleColor.White;
+                                ColorMatch(1);
                                 Console.Write($" | {split[1]}");
                                 choice = 0;
                                 break;

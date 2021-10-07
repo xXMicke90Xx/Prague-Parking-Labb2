@@ -394,10 +394,23 @@ namespace Prague_Parking
 
             for (int i = 0; i < myVehicles.Length; i++)
             {
-                if (myVehicles[i].Contains(searchForRegistration))
+                if (myVehicles[i].Contains("CAR") || myVehicles[i].Contains("MC ") && FoundTwoMatches(myVehicles[i]) == false)
                 {
-                    isFound = true;
-                    index = i;
+                    string[] splitCar = myVehicles[i].Split('#');
+                    if (splitCar[1] == searchForRegistration)
+                    {
+                        isFound = true;
+                        index = i;
+                    }
+                }
+                else if(myVehicles[i].Contains("MC ") && FoundTwoMatches(myVehicles[i]) == true)
+                {
+                    string[] splitIfTwo = myVehicles[i].Split('#','|');
+                    if(splitIfTwo[1] == searchForRegistration || splitIfTwo[4] == searchForRegistration)
+                    {
+                        isFound = true;
+                        index = i;
+                    }
                 }
             }
             return isFound;

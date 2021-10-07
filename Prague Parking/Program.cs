@@ -23,6 +23,7 @@ namespace Prague_Parking
         {
             while (input != "5")
             {
+                
                 PrintColumnsOfVehicles();
                 MainMenu();
                 input = GetResponse("Please enter a choice 1-4, or 5 to exit: ");
@@ -450,6 +451,7 @@ namespace Prague_Parking
             return diff;
 
         }
+        //------------------------------Skriver ut ruta för men information för användare om vart fordon finns och hur länge den har stått där-------------------------------------------
         static void CheckoutMessage(int index)
         {
             Console.Clear();
@@ -465,7 +467,7 @@ namespace Prague_Parking
                 "|                                           |",
                 "|                                           |",
                 "|         The Total Time Parked Is          |",
-                "|                    Minutes                |",
+                "|                                           |",
                 "|                                           |",
                 "|                                           |",
                 "|___________________________________________|"};
@@ -479,8 +481,8 @@ namespace Prague_Parking
             }
             Console.SetCursorPosition((Console.WindowWidth / 2), (Console.WindowHeight / 2) - 1);
             Console.Write(index);
-            Console.SetCursorPosition((Console.WindowWidth / 2) - 5, (Console.WindowHeight / 2) + 2);
-            Console.Write(Math.Round(checkOutTime.TotalMinutes, 0));
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 8, (Console.WindowHeight / 2) + 3);
+            Console.Write(Math.Round((double)checkOutTime.Hours, 0).ToString() + "Hours " + Math.Round(checkOutTime.TotalMinutes, 0 ) + "Minutes");
             Console.ReadLine();
         }
         
@@ -501,7 +503,7 @@ namespace Prague_Parking
             {
                 if (RegSearch == "")
                 {
-                    CursorReset();
+                    SearchTextClearer();
 
 
                     Console.WriteLine("\n\n");
@@ -528,7 +530,7 @@ namespace Prague_Parking
                                     {
                                         
                                         Console.WriteLine("Two Vehicles was found in the space, select one to remove");
-                                        myVehicles[savedIndex] = ChoseMC(savedIndex, cki);
+                                        myVehicles[savedIndex] = OneMCRemove(savedIndex, cki);
                                         userDone = true;
                                         CheckoutMessage(savedIndex+1);
                                     }
@@ -554,7 +556,7 @@ namespace Prague_Parking
                                 }
                                 else
                                 {
-                                    CursorReset();
+                                    SearchTextClearer();
 
 
                                     Console.WriteLine("\n\n");
@@ -592,7 +594,7 @@ namespace Prague_Parking
                                 break;
                             else
                             {
-                                CursorReset();
+                                SearchTextClearer();
 
                                 RegSearch = RegSearch.Remove(RegSearch.Length - 1);
                                 Console.WriteLine("\n\n");
@@ -608,17 +610,14 @@ namespace Prague_Parking
                         {
                             if (char.IsLetterOrDigit(cki.KeyChar))
                             {
-                                var position = Console.CursorTop;
-
-                                Console.SetCursorPosition(0, position);
-                                CleanScreen(position);
+                                SearchTextClearer();
 
                                 Console.WriteLine("\n\n");
                                 Console.WriteLine("Please enter the registration number of the car you wish to check out.  ");
                                 RegSearch += cki.KeyChar;
                                 Console.Write($"Registration number: {RegSearch}");
                                 savedIndex = SearchResult(RegSearch.ToUpper());
-                                Console.SetCursorPosition(0, position);
+                                Console.SetCursorPosition(0, cHeight);
                             }
                             break;
                         }
@@ -627,7 +626,7 @@ namespace Prague_Parking
             Console.Clear();
         }
 
-        public static void CursorReset()
+        public static void SearchTextClearer()
         {
             var position = Console.CursorTop;
 
@@ -640,7 +639,10 @@ namespace Prague_Parking
 
         
 
-    private static string ChoseMC(int index, ConsoleKeyInfo cki)
+
+
+        //--------------------------------------Vid sökning och två fordon finns på samma plats, låter användaren välja ett fordon------------------------------------------------------- 
+    private static string OneMCRemove(int index, ConsoleKeyInfo cki)
         {
 
             // ColorMatch är en överlagring på en metod "0" och "1" säger vilket färgval man vill ha
@@ -720,6 +722,8 @@ namespace Prague_Parking
                 return split[0];
             }
         }
+
+        //-------------------------------------Skriver ut instruktionsruta vid sökning av fordon------------------------------------
         static void Instructions(int cursorX, int cursorY)
         {
 

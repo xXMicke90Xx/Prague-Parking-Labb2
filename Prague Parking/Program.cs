@@ -203,7 +203,7 @@ namespace Prague_Parking
             }
             return result;
         }
-        // -------------------------Sak ta emot och lagra vart bilar på tillgänglig plats--------------------------
+        // -------------------------Ska ta emot och lagra vart bilar på tillgänglig plats--------------------------
 
 
         #region CheckIn and helper functions to that
@@ -488,7 +488,7 @@ namespace Prague_Parking
         {
             ConsoleKeyInfo cki;
 
-            Console.Write("Please enter the registration number of the car you wish to check out: ");
+            
 
             Console.WriteLine();
             string RegSearch = "";
@@ -496,6 +496,17 @@ namespace Prague_Parking
             int savedIndex = -1;
             while (userDone == false)
             {
+                if (RegSearch == "")
+                {
+                    var cursorHeight = Console.CursorTop;
+                    Console.SetCursorPosition(0, cursorHeight);
+                    CleanScreen(cursorHeight);
+
+
+                    Console.WriteLine("\n\n");
+                    Console.WriteLine("Please enter the registration number of the car you wish to check out: ");
+                    Console.Write($"Registration number: {RegSearch}");
+                }
                 cki = Console.ReadKey(true);
 
                 switch (cki.Key)

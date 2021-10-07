@@ -466,13 +466,15 @@ namespace Prague_Parking
             
             for (int i = 0; i < checkOutMessage.Length; i++)
             {
-                Console.SetCursorPosition((Console.WindowWidth / 2) - 22  , (Console.WindowHeight / 2) -8 + i);
+                Console.SetCursorPosition((Console.WindowWidth / 2) - checkOutMessage[0].Length/2  , (Console.WindowHeight / 2) - checkOutMessage.Length/2 + i);
                 Console.WriteLine(checkOutMessage[i]);
                 
             }
+            Console.SetCursorPosition((Console.WindowWidth / 2), (Console.WindowHeight / 2) - 1);
+            Console.Write(index);
             Console.ReadLine();
         }
-        //---------------------------------Ska användas för att checka ut bil-----------------------------------------------------------
+        //------------------------Ska användas för att checka ut bil, varje knapptryck registreras-----------------------------------------------------------
         static void CheckOut()
         {
             ConsoleKeyInfo cki;

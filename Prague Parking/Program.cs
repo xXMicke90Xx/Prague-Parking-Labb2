@@ -447,20 +447,29 @@ namespace Prague_Parking
         static void CheckoutMessage(int index)
         {
             DateTime checkOutTime = DateTime.Now;
-            string lol = myVehicles[index].Substring(myVehicles[index].Length - 6);
+            
             Console.Clear();
 
-            string checkOutMessage = @$"___________________________________________
-                                       |               Titel: Help                 |
-                                       |                                           |
-                                       |  The Vehicle is located at ParkingSpace   |
-                                       |                 {index + 1}                 |
-                                       |    It has been parked for a total of      |
-                                       |               {checkOutTime.Hour}                            |
-                                       |                                           |
-                                       |___________________________________________|";
-            Console.SetCursorPosition(Console.WindowWidth / 2, Console.WindowHeight / 2);
-            Console.WriteLine(checkOutMessage);
+            string[] checkOutMessage = new string[11] {
+                "_____________________________________________",
+                "|               CheckOut                    |",
+                "|                                           |",
+                "|  The Vehicle Is Located At Parkingspace   |",
+                "|                                           |",
+                "|                                           |",
+                "|       The total time parked is            |",
+                "|                    Minutes                |",
+                "|                                           |",
+                "|                                           |",
+                "_____________________________________________"};
+
+            
+            for (int i = 0; i < checkOutMessage.Length; i++)
+            {
+                Console.SetCursorPosition((Console.WindowWidth / 2) - 22  , (Console.WindowHeight / 2) -8 + i);
+                Console.WriteLine(checkOutMessage[i]);
+                
+            }
             Console.ReadLine();
         }
         //---------------------------------Ska användas för att checka ut bil-----------------------------------------------------------

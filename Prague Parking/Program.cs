@@ -443,16 +443,28 @@ namespace Prague_Parking
         }
 
         #endregion
+        public static TimeSpan TotalTimeParked(string vehicle)
+        {
+            
+            DateTime checkOutTime = DateTime.Now;
+            DateTime checkInTime = Convert.ToDateTime(vehicle.Substring(vehicle.Length - 6));
+            
+            TimeSpan diff = checkOutTime.Subtract(checkInTime);
+            
+            
+            return diff ;
 
+        }
         static void CheckoutMessage(int index)
         {
-            DateTime checkOutTime = DateTime.Now;
-            
             Console.Clear();
+            TimeSpan checkOutTime = TotalTimeParked(myVehicles[index-1]);
+            
+            
 
             string[] checkOutMessage = new string[11] {
                 "_____________________________________________",
-                "|               CheckOut                    |",
+                "|                  CheckOut                 |",
                 "|                                           |",
                 "|  The Vehicle Is Located At Parkingspace   |",
                 "|                                           |",
@@ -472,6 +484,8 @@ namespace Prague_Parking
             }
             Console.SetCursorPosition((Console.WindowWidth / 2), (Console.WindowHeight / 2) - 1);
             Console.Write(index);
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 5, (Console.WindowHeight / 2) + 2);
+            Console.Write(Math.Round(checkOutTime.TotalMinutes, 0));
             Console.ReadLine();
         }
         //------------------------Ska användas för att checka ut bil, varje knapptryck registreras-----------------------------------------------------------

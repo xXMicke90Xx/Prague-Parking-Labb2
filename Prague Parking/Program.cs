@@ -131,7 +131,7 @@ namespace Prague_Parking
                 Console.Write($"{i + myVehicles.Length / 2 + 1} {myVehicles[i + myVehicles.Length / 2].PadRight((Console.WindowWidth / 3) - 19)}|");
                 //Skriver ut 76 - 100
                 ColorMatch(myVehicles[i + (myVehicles.Length / 4) * 3]);
-                Console.Write($"{i + ((myVehicles.Length / 4) * 3) + 1}{(i == 24 ? "" : " ")} {myVehicles[i + (myVehicles.Length / 4) * 3]}|");
+                Console.Write($"{i + ((myVehicles.Length / 4) * 3) + 1}{(i == 24 ? "" : " ")} {myVehicles[i + (myVehicles.Length / 4) * 3]}");
 
                 Console.WriteLine();
                 Console.ResetColor();
@@ -596,15 +596,17 @@ namespace Prague_Parking
         private static string ChoseMC(int index, ConsoleKeyInfo cki)
         {
 
-            
+            // ColorMatch är en överlagring på en metod "0" och "1" säger vilket färgval man vill ha
             bool madeChoice = false;
             byte choice = 0;
             string[] split = myVehicles[index].Split("|");
+
             ColorMatch(0);
             Console.Write($"{split[0]}");
             ColorMatch(1);
             Console.Write(" | ");
             Console.Write($"{split[1]}");
+
             while (madeChoice == false)
             {
                 cki = Console.ReadKey(true);
@@ -720,6 +722,7 @@ namespace Prague_Parking
             else
                 return -1;
         }
+        //-------------------------------Skriver ut sökresultat på en specifik plats----------------------------
         static void PrintSearchResult(int index, bool firstMatch, int WindowHeightSetting)
         {
              

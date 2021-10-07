@@ -16,7 +16,6 @@ namespace Prague_Parking
             WindowSetup();
             FillNullSpaces();
             Run();
-
             Console.ReadLine();
         }
 
@@ -162,7 +161,7 @@ namespace Prague_Parking
         }
         static void ColorMatch(byte colorChange)
         {
-            if (colorChange == 0) 
+            if (colorChange == 0)
             {
                 Console.BackgroundColor = ConsoleColor.DarkGray;
                 Console.ForegroundColor = ConsoleColor.Cyan;
@@ -172,9 +171,9 @@ namespace Prague_Parking
                 Console.BackgroundColor = ConsoleColor.Black;
                 Console.ForegroundColor = ConsoleColor.White;
             }
-            
-            
-            
+
+
+
         }
 
         #endregion
@@ -210,7 +209,7 @@ namespace Prague_Parking
         #region CheckIn and helper functions to that
         static void CheckIn()
         {
-
+            bool isNoMatch = false;
             // Console.Clear();
             string vehicleType = "";
             string checkingIn = GetResponse("[1] check in a Car or [2] check in motorcykle or [3] to exit ");
@@ -218,7 +217,10 @@ namespace Prague_Parking
             SelectVehicleType(ref vehicleType, ref checkingIn);
 
             string registrationNumber = GetResponse("Enter your registration number, max 10 characters long: ");
+
             registrationNumber = EnterRegistration(registrationNumber);
+
+
             DateTime timeCheckedIn = DateTime.Now;
 
             //flyttar fordon
@@ -278,19 +280,12 @@ namespace Prague_Parking
         }
         private static string EnterRegistration(string registrationNumber)
         {
-            Regex matchAccents = new Regex(@"[a-zA-ZÀ-ÖØ-öø-ÿ0-9]");
-            for (int i = 0; i < myVehicles.Length; i++)
+            Regex matchAccents = new Regex(@"[a-zA-ZÀ-ÖØ-öø-ÿ0-9]{1,10}");
+            for (int i = 0; i < registrationNumber.Length; i++)
             {
-                if (myVehicles[i].Contains(registrationNumber.ToUpper()))
+                while (!matchAccents.IsMatch(registrationNumber[i].ToString().ToUpper()))
                 {
                     registrationNumber = GetResponse("Enter your registration number, max 10 characters long: ");
-                    for (int j = 0; j < registrationNumber.Length; j++)
-                    {
-                        if (matchAccents.IsMatch(registrationNumber[j].ToString().ToUpper()) != true || registrationNumber.Length > 10 || myVehicles[i].Contains(registrationNumber.ToUpper()))
-                        {
-                            registrationNumber = GetResponse("Enter your registration number, max 10 characters long: ");
-                        }
-                    }
                 }
             }
             return registrationNumber.ToUpper();
@@ -513,7 +508,7 @@ namespace Prague_Parking
                                 cki = Console.ReadKey(true);
                                 if (cki.Key == ConsoleKey.Enter)
                                 {
-                                    
+
 
                                     if ((FoundTwoMatches(myVehicles[savedIndex]) == true && myVehicles[savedIndex].Substring(0, myVehicles[savedIndex].IndexOf('|')).Contains(RegSearch.ToUpper())) ||
                                        (FoundTwoMatches(myVehicles[savedIndex]) == true && myVehicles[savedIndex].Substring(myVehicles[savedIndex].IndexOf("|"), 10).Contains(RegSearch.ToUpper())))
@@ -617,7 +612,7 @@ namespace Prague_Parking
             }
             Console.Clear();
         }
-        
+
         private static string ChoseMC(int index, ConsoleKeyInfo cki)
         {
 

@@ -501,7 +501,7 @@ namespace Prague_Parking
             {
                 if (RegSearch == "")
                 {
-                    SetCursorPosition();
+                    CursorReset();
 
 
                     Console.WriteLine("\n\n");
@@ -554,7 +554,7 @@ namespace Prague_Parking
                                 }
                                 else
                                 {
-                                    SetCursorPosition();
+                                    CursorReset();
 
 
                                     Console.WriteLine("\n\n");
@@ -592,7 +592,7 @@ namespace Prague_Parking
                                 break;
                             else
                             {
-                                SetCursorPosition();
+                                CursorReset();
 
                                 RegSearch = RegSearch.Remove(RegSearch.Length - 1);
                                 Console.WriteLine("\n\n");
@@ -627,7 +627,7 @@ namespace Prague_Parking
             Console.Clear();
         }
 
-        public static void SetCursorPosition()
+        public static void CursorReset()
         {
             var position = Console.CursorTop;
 

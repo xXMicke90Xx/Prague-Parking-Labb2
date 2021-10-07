@@ -54,6 +54,7 @@ namespace Prague_Parking
             Console.SetCursorPosition(0, 0);
         }
         //-----------------------Huvudmeny--------------------------------------
+        //test
         static void MainMenyChoice(string input)
         {
             switch (input)

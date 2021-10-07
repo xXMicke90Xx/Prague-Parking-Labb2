@@ -10,15 +10,19 @@ namespace Prague_Parking
         public static string[] myVehicles = new string[100];
         public static int index = 0;
         public static int nextSpot = 0;
-
+        public static string input = "";
         static void Main(string[] args)
         {
             WindowSetup();
-
             FillNullSpaces();
+            Run();
 
-            string input = "";
-            while (input != "6")
+            Console.ReadLine();
+        }
+
+        private static void Run()
+        {
+            while (input != "5")
             {
                 PrintColumnsOfVehicles();
                 MainMenu();
@@ -26,8 +30,6 @@ namespace Prague_Parking
                 MainMenyChoice(input);
                 Console.Clear();
             }
-
-            Console.ReadLine();
         }
 
         static void WindowSetup()
@@ -65,13 +67,11 @@ namespace Prague_Parking
                 case "3":
                     CheckOut();
                     break;
+
                 case "4":
-                    Help();
-                    break;
-                case "5":
                     //Den ska bara vara break
                     break;
-                case "6":
+                case "5":
                     {
                         Console.WriteLine("Closing project");
                         Thread.Sleep(60);
@@ -88,16 +88,15 @@ namespace Prague_Parking
         static void MainMenu()
         {
 
-            string[] menu = new string[11] {
+            string[] menu = new string[10] {
                 "_____________________________________________",
                 "|       Titel: Prague Parking               |",
-                "|                                           |",
                 "|        [1] Incheckning av fordon          |",
                 "|        [2] Flytta fordon                  |",
                 "|        [3] Checka ut fordon               |",
-                "|        [4] Hjälp                          |",
-                "|        [5] Reset Window                   |",
-                "|        [6] Avsluta                        |",
+                "|        [4] Reset Window                   |",
+                "|        [5] Avsluta                        |",
+                "|                                           |",
                 "|                                           |",
                 "_____________________________________________"};
 
@@ -196,7 +195,7 @@ namespace Prague_Parking
 
             // Console.Clear();
             string vehicleType = "";
-            string checkingIn = GetResponse("[1] check in a Car or [2] check in motorcykle ");
+            string checkingIn = GetResponse("[1] check in a Car or [2] check in motorcykle or [3] to exit ");
             //Sätter fordonstypen
             SelectVehicleType(ref vehicleType, ref checkingIn);
 
@@ -205,17 +204,17 @@ namespace Prague_Parking
             DateTime timeCheckedIn = DateTime.Now;
 
             //flyttar fordon
-            VehicleAtCorrectPosition(vehicleType, registrationNumber, timeCheckedIn);
+            CheckInCorrectPosition(vehicleType, registrationNumber, timeCheckedIn);
 
         }
 
         private static void SelectVehicleType(ref string vehicleType, ref string checkingIn)
         {
-            while (checkingIn.Trim() != "1" && checkingIn.Trim() != "2")
+            while (checkingIn.Trim() != "1" && checkingIn.Trim() != "2" && checkingIn != "3")
             {
                 Console.SetCursorPosition((Console.WindowWidth - checkingIn.Length) / 2 - 1, Console.CursorTop);
                 Console.WriteLine("Please enter 1 or 2");
-                checkingIn = GetResponse("[1] check in a Car or [2] check in motorcykle ");
+                checkingIn = GetResponse("[1] check in a Car or [2] check in motorcykle or [3] to exit ");
             }
             switch (checkingIn)
             {
@@ -225,10 +224,14 @@ namespace Prague_Parking
                 case "2":
                     vehicleType = "MC ";
                     break;
+                case "3":
+                    Console.Clear();
+                    Run();
+                    break;
             }
         }
 
-        private static void VehicleAtCorrectPosition(string vehicleType, string registrationNumber, DateTime timeCheckedIn)
+        private static void CheckInCorrectPosition(string vehicleType, string registrationNumber, DateTime timeCheckedIn)
         {
             string correctFormatedString = $"{ vehicleType}#{registrationNumber}#{timeCheckedIn.ToString("MMM-dd HH:mm")}";
             for (int i = 0; i < myVehicles.Length; i++)
@@ -326,7 +329,13 @@ namespace Prague_Parking
                 nextSpot = GetResponseAsNumber("Which spot do you want to move the vehicle to?", ref index);
 
             } while (nextSpot < 0 && nextSpot > 99 || nextSpot == index);
+            InsertAtCorrectPosition(index, searchForRegistration, nextSpot);
 
+            return nextSpot;
+        }
+
+        private static void InsertAtCorrectPosition(int index, string searchForRegistration, int nextSpot)
+        {
             for (int i = 0; i < myVehicles.Length; i++)
             {
                 if (myVehicles[nextSpot].Contains("Ledig") && myVehicles[index].Contains("CAR"))
@@ -365,6 +374,7 @@ namespace Prague_Parking
                         }
                     }
                 }
+                //beroende på vart i strängen MCn finns
                 else if (!myVehicles[nextSpot].Contains("CAR") && myVehicles[index].Contains("MC ") && FoundTwoMatches(myVehicles[nextSpot]) == false)
                 {
                     string[] tempHolder = myVehicles[index].Split("|");
@@ -384,8 +394,6 @@ namespace Prague_Parking
                     }
                 }
             }
-
-            return nextSpot;
         }
 
         private static bool SearchForRegistration(ref int index, string searchForRegistration)
@@ -396,17 +404,17 @@ namespace Prague_Parking
             {
                 if (myVehicles[i].Contains("CAR") || myVehicles[i].Contains("MC ") && FoundTwoMatches(myVehicles[i]) == false)
                 {
-                    string[] splitCar = myVehicles[i].Split('#');
-                    if (splitCar[1] == searchForRegistration)
+                    string[] splitIfOne = myVehicles[i].Split('#');
+                    if (splitIfOne[1] == searchForRegistration)
                     {
                         isFound = true;
                         index = i;
                     }
                 }
-                else if(myVehicles[i].Contains("MC ") && FoundTwoMatches(myVehicles[i]) == true)
+                else if (myVehicles[i].Contains("MC ") && FoundTwoMatches(myVehicles[i]) == true)
                 {
-                    string[] splitIfTwo = myVehicles[i].Split('#','|');
-                    if(splitIfTwo[1] == searchForRegistration || splitIfTwo[4] == searchForRegistration)
+                    string[] splitIfTwo = myVehicles[i].Split('#', '|');
+                    if (splitIfTwo[1] == searchForRegistration || splitIfTwo[4] == searchForRegistration)
                     {
                         isFound = true;
                         index = i;
@@ -712,36 +720,6 @@ namespace Prague_Parking
                     myVehicles[i] = "Ledig";
                 }
             }
-        }
-        static void Help()
-        {
-
-            //string help = @"___________________________________________
-            //               |               Titel: Help                 |
-            //               |                                           |
-            //               | [1] How to check in Car/MC                |
-            //               |    -> Enter a valid register number and   |
-            //               |       what type of vehicle you want to    |
-            //               |       park.                               |
-            //               | [2] How to move Car/MC                    |
-            //               |    -> Enter the register number of the    |
-            //               |       vehicle and find a new parking lot. |
-            //               | [3] How to remove Car/MC                  |
-            //               |    -> Find the vehicle you want to remove |
-            //               |       and enter it's registernumber.      |
-            //               | [4] Exit                                  |
-            //               |___________________________________________|";
-
-            string help = @"___________________________________________
-                           |               Titel: Help                 |
-                           |                                           |
-                           | [1] How to check in Car/MC                |
-                           | [2] How to move Car/MC                    |
-                           | [3] How to remove Car/MC                  |
-                           | [4] Exit                                  |
-                           |                                           |
-                           |___________________________________________|";
-            Console.WriteLine(help);
         }
     }
 }

@@ -21,12 +21,12 @@ namespace Prague_Parking
 
         private static void Run()
         {
-            while (input != "5")
+            while (input != "6")
             {
                 
                 PrintColumnsOfVehicles();
                 MainMenu();
-                input = GetResponse("Please enter a choice 1-4, or 5 to exit: ");
+                input = GetResponse("Please enter a choice 1-5, or 6 to exit: ");
                 MainMenyChoice(input);
                 Console.Clear();
             }
@@ -303,9 +303,6 @@ namespace Prague_Parking
 
         #endregion
 
-
-
-
         static bool FoundTwoMatches(string finalString)
         {
             bool isFound = false;
@@ -463,7 +460,6 @@ namespace Prague_Parking
             return isFound;
         }
         
-
         #endregion
         public static TimeSpan TotalTimeParked(string vehicle)
         {
@@ -894,6 +890,7 @@ namespace Prague_Parking
                         break;
                     case "4":
                         Console.Clear();
+                        Run();
                         break;
                     default:
                         break;

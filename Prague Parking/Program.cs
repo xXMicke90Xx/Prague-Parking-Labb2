@@ -63,10 +63,10 @@ namespace Prague_Parking
                     CheckIn();
                     break;
                 case "2":
-                    MoveVehicle(index, nextSpot);
+                    MoveVehicle(index);
                     break;
                 case "3":
-                    CheckOut();
+                    CheckOut("CheckOut");
                     break;
 
                 case "4":
@@ -290,9 +290,10 @@ namespace Prague_Parking
             Regex matchAccents = new Regex(@"[a-zA-ZÀ-ÖØ-öø-ÿ0-9]{1,10}");
             for (int i = 0; i < registrationNumber.Length; i++)
             {
-                while (!matchAccents.IsMatch(registrationNumber[i].ToString().ToUpper()) && !Char.IsLetterOrDigit(registrationNumber[i]))
+                while (registrationNumber == null || registrationNumber == "" || !matchAccents.IsMatch(registrationNumber[i].ToString().ToUpper()) && !Char.IsLetterOrDigit(registrationNumber[i]))
                 {
                     registrationNumber = GetResponse("Enter your registration number, max 10 characters long: ");
+                    i = 0;
                 }
             }
             return registrationNumber.ToUpper();
@@ -316,35 +317,16 @@ namespace Prague_Parking
         }
 
         #region Move Vehicles(s) and helper functions
-        static void MoveVehicle(int index, int nextSpot)
+        static void MoveVehicle(int index)
         {
             bool isFound = false;
             string searchForRegistration = "";
-            while(isFound != true)
-            {
+            searchForRegistration = CheckOut("Move");
+
+            InsertMovedVehicle(ref index, searchForRegistration);
 
 
 
-
-            }
-
-
-
-            searchForRegistration = searchForRegistration.ToUpper();
-            //söker efter inmatat registreringsnummer
-            isFound = SearchForRegistration(ref index, searchForRegistration);
-
-
-            //TODO: testa && bryta ut i en funktion
-            if (isFound == true)
-            {
-                nextSpot = InsertMovedVehicle(ref index, searchForRegistration);
-            }
-            else
-            {
-                Console.SetCursorPosition((Console.WindowWidth) / 2 - 1, Console.CursorTop);
-                Console.WriteLine("No matches found");
-            }
 
 
         }
@@ -354,9 +336,9 @@ namespace Prague_Parking
             int nextSpot;
             do
             {
-                Console.SetCursorPosition((Console.WindowWidth) / 2, Console.CursorTop);
-                Console.WriteLine("Använd ett tal mellan 1 och 100");
-                Console.SetCursorPosition((Console.WindowWidth) / 2, Console.CursorTop);
+                Console.SetCursorPosition((Console.WindowWidth) / 2 - 13, Console.CursorTop);
+                Console.WriteLine("Use a number between 1-100");
+                Console.SetCursorPosition((Console.WindowWidth) / 2 - 23, Console.CursorTop);
                 nextSpot = GetResponseAsNumber("Which spot do you want to move the vehicle to?", ref index);
 
             } while (nextSpot < 0 && nextSpot > 99 || nextSpot == index);
@@ -511,17 +493,39 @@ namespace Prague_Parking
             Console.Write(Math.Round((double)checkOutTime.Hours, 0).ToString() + "Hours " + Math.Round(checkOutTime.TotalMinutes, 0 ) + "Minutes");
             Console.ReadLine();
         }
-        
 
-        public static void StandardCheckOutMessage(string RegSearch)
+        public static void MoveOrCheckOutFunction(string RegSearch, string check)
         {
-            Console.WriteLine("\n\n");
-            Console.WriteLine("Please enter the registration number of the car you wish to check out.");
-            Console.Write($"Registration number: {RegSearch}");
+            if (check == "CheckOut")
+            {
+               
+            }
+            else if (check == "Move")
+            {
+                
+            }
+        }
+
+
+
+        public static void MoveOrCheckOutMessage(string RegSearch, string check)
+        {
+            if (check == "CheckOut")
+            {
+                Console.WriteLine("\n\n");
+                Console.WriteLine("Please enter the registration number of the car you wish to check out.");
+                Console.Write($"Registration number: {RegSearch}");
+            }
+            else if (check == "Move")
+            {
+                Console.WriteLine("\n\n");
+                Console.WriteLine("Please enter the registration number of the car you wish to move.");
+                Console.Write($"Registration number: {RegSearch}");
+            }
         }
         
         //------------------------Ska användas för att checka ut bil, varje knapptryck registreras-----------------------------------------------------------
-        static void CheckOut()
+        static string CheckOut(string check)
         {
             ConsoleKeyInfo cki;
             string[] copy = new string[3];
@@ -539,7 +543,7 @@ namespace Prague_Parking
                 {
                     SearchTextClearer();
 
-                    StandardCheckOutMessage(RegSearch);
+                    MoveOrCheckOutMessage(RegSearch, check);
 
 
                 }
@@ -551,8 +555,7 @@ namespace Prague_Parking
                         {
                             if (RegSearch.Length > 0 && savedIndex >= 0)
                             {
-                                Console.WriteLine("Are you sure you want to remove the vehicle? Then press enter");
-                                cki = Console.ReadKey(true);
+                                
                                 if (cki.Key == ConsoleKey.Enter)
                                 {
 
@@ -562,22 +565,47 @@ namespace Prague_Parking
 
                                     {
 
-                                        Console.WriteLine("Two Vehicles was found in the space, select one to remove");
-                                        myVehicles[savedIndex] = OneMCRemove(savedIndex, cki);
+                                        Console.WriteLine("Two Vehicles was found in the space, please select one");
+                                        if (check == "Move")
+                                        {
+                                            return OneMCRemove(savedIndex, cki, check);
+                                        }
+                                        else
+                                        {
+                                            myVehicles[savedIndex] = OneMCRemove(savedIndex, cki, check);
+                                            CheckoutMessage(savedIndex + 1);
+                                        }
+                                        
                                         userDone = true;
-                                        CheckoutMessage(savedIndex+1);
+                                        
                                     }
                                     else if (myVehicles[savedIndex].Substring(0, 3) == "CAR")
                                     {
-                                        CheckoutMessage(savedIndex+1);
-                                        myVehicles[savedIndex] = "Ledig";
+                                        if (check == "Move")
+                                        {
+                                            return myVehicles[savedIndex];
+                                        }
+                                        else
+                                        {
+                                            CheckoutMessage(savedIndex + 1);
+                                            myVehicles[savedIndex] = "Ledig";
+                                        }
+                                        
                                         userDone = true;
 
                                     }
                                     else if (myVehicles[savedIndex].Substring(0, 3) == "MC ")
                                     {
-                                        CheckoutMessage(savedIndex+1);
-                                        myVehicles[savedIndex] = "Ledig";
+                                        if (check == "Move")
+                                        {
+                                            return myVehicles[savedIndex];
+                                        }
+                                        else
+                                        {
+                                            CheckoutMessage(savedIndex + 1);
+                                            myVehicles[savedIndex] = "Ledig";
+                                        }
+                                        
                                         userDone = true;
                                     }
                                     else
@@ -592,7 +620,7 @@ namespace Prague_Parking
                                     SearchTextClearer();
 
 
-                                    StandardCheckOutMessage(RegSearch);
+                                    MoveOrCheckOutMessage(RegSearch, check);
 
 
                                     Console.SetCursorPosition(0, cHeight);
@@ -608,12 +636,7 @@ namespace Prague_Parking
 
 
                         }
-                    case ConsoleKey.DownArrow:
-                        {
-                            Console.SetCursorPosition((Console.WindowWidth / 4) * 3, cHeight );
-                            
-                            break;
-                        }
+                    
                     case ConsoleKey.Escape:
                         {
                             userDone = true;
@@ -628,7 +651,7 @@ namespace Prague_Parking
                                 SearchTextClearer();
 
                                 RegSearch = RegSearch.Remove(RegSearch.Length - 1);
-                                StandardCheckOutMessage(RegSearch);
+                                MoveOrCheckOutMessage(RegSearch, check);
 
                                 savedIndex = SearchResult(RegSearch.ToUpper());
                                 Console.SetCursorPosition(0, Console.CursorTop);
@@ -641,7 +664,7 @@ namespace Prague_Parking
                             {
                                 SearchTextClearer();
 
-                                StandardCheckOutMessage(RegSearch);
+                                MoveOrCheckOutMessage(RegSearch, check);
                                 RegSearch += cki.KeyChar;
                                 
                                 savedIndex = SearchResult(RegSearch.ToUpper());
@@ -652,6 +675,7 @@ namespace Prague_Parking
                 }
             }
             Console.Clear();
+            return "";
         }
 
         public static void SearchTextClearer()
@@ -670,7 +694,7 @@ namespace Prague_Parking
 
 
         //--------------------------------------Vid sökning och två fordon finns på samma plats, låter användaren välja ett fordon------------------------------------------------------- 
-    private static string OneMCRemove(int index, ConsoleKeyInfo cki)
+    private static string OneMCRemove(int index, ConsoleKeyInfo cki, string check)
         {
 
             // ColorMatch är en överlagring på en metod "0" och "1" säger vilket färgval man vill ha
@@ -741,7 +765,15 @@ namespace Prague_Parking
             }
 
             Console.ResetColor();
-            if (choice == 0)
+            if (choice == 0 && check == "Move")
+            {
+                return split[0];
+            }
+            if (choice == 0 && check == "CheckOut")
+            {
+                return split[1];
+            }
+            else if (choice == 1 && check == "Move")
             {
                 return split[1];
             }

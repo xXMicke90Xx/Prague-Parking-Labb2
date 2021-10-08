@@ -21,12 +21,12 @@ namespace Prague_Parking
 
         private static void Run()
         {
-            while (input != "5")
+            while (input != "6")
             {
                 
                 PrintColumnsOfVehicles();
                 MainMenu();
-                input = GetResponse("Please enter a choice 1-4, or 5 to exit: ");
+                input = GetResponse("Please enter a choice 1-5, or 6 to exit: ");
                 MainMenyChoice(input);
                 Console.Clear();
             }
@@ -73,6 +73,9 @@ namespace Prague_Parking
                     //Den ska bara vara break
                     break;
                 case "5":
+                    MainHelpMenu();
+                    break;
+                case "6":
                     {
                         Console.WriteLine("Closing project");
                         Thread.Sleep(60);
@@ -97,8 +100,8 @@ namespace Prague_Parking
                 "|        [2] Move Vehicle                   |",
                 "|        [3] Check Out Vehicle              |",
                 "|        [4] Reset Window                   |",
-                "|        [5] Exit Application               |",
-                "|                                           |",
+                "|        [5] Help                           |",
+                "|        [6] Exit Application               |",
                 "|                                           |",
                 "|___________________________________________|"};
 
@@ -301,9 +304,6 @@ namespace Prague_Parking
 
         #endregion
 
-
-
-
         static bool FoundTwoMatches(string finalString)
         {
             bool isFound = false;
@@ -445,7 +445,6 @@ namespace Prague_Parking
             return isFound;
         }
         
-
         #endregion
         public static TimeSpan TotalTimeParked(string vehicle)
         {
@@ -677,7 +676,6 @@ namespace Prague_Parking
             Console.Clear();
             return "";
         }
-
         public static void SearchTextClearer()
         {
             var position = Console.CursorTop;
@@ -685,14 +683,6 @@ namespace Prague_Parking
             Console.SetCursorPosition(0, position);
             CleanScreen(position);
         }
-        
-
-            
-
-        
-
-
-
         //--------------------------------------Vid sökning och två fordon finns på samma plats, låter användaren välja ett fordon------------------------------------------------------- 
     private static string OneMCRemove(int index, ConsoleKeyInfo cki, string check)
         {
@@ -888,5 +878,109 @@ namespace Prague_Parking
                 }
             }
         }
+        static void MainHelpMenu()
+        {
+            Console.Clear();
+            PrintColumnsOfVehicles();
+            string HelpMenu = @"
+             ___________________________________________
+            |               Titel: Help                 |
+            |                                           |
+            | [1] How to check in Car/MC                |
+            | [2] How to move Car/MC                    |
+            | [3] How to remove Car/MC                  |
+            | [4] Exit                                  |
+            |                                           |
+            |___________________________________________|";
+            Console.WriteLine(HelpMenu);
+
+
+            string userInput = GetResponse("\t\tPlease enter a number between 1-4.");
+            string SecondInput = "";
+
+            do
+            {
+                switch (userInput)
+                {
+                    case "1":
+                        SkrivaIn();
+                        SecondInput = GetResponse("\t\tPlease press X to go back.");
+                        if (SecondInput == "X" || SecondInput == "x")
+                        {
+                            MainHelpMenu();
+                        }
+                        break;
+                    case "2":
+                        FlyttaFordon();
+                        SecondInput = GetResponse("\t\tPlease press X to go back.");
+                        if (SecondInput == "X" || SecondInput == "x")
+                        {
+                            MainHelpMenu();
+                        }
+                        break;
+                    case "3":
+                        TaBortFordon();
+                        SecondInput = GetResponse("\t\tPlease press X to go back.");
+                        if (SecondInput == "X" || SecondInput == "x")
+                        {
+                            MainHelpMenu();
+                        }
+                        break;
+                    case "4":
+                        Console.Clear();
+                        Run();
+                        break;
+                    default:
+                        break;
+                }
+
+            } while (userInput != "X" || userInput != "x");
+        }
+        static void SkrivaIn()
+        {
+            Console.Clear();
+            string CheckInMenu = @"
+             ___________________________________________
+            | Titel: How to check in Car/MC             |
+            | * To check in the car, first you need to  |
+            |   enter its registernumber and the        |
+            |   computer will find an empty place for   |
+            |   vehicle.                                |
+            |                                           |
+            |                                           |
+            |___________________________________________|";
+            Console.WriteLine(CheckInMenu);
+        }
+        static void FlyttaFordon()
+        {
+            Console.Clear();
+            string MoveVehicle = @"
+             ___________________________________________
+            | Titel: How to move Car/MC                 |
+            | * To move the car, enter its register-    |
+            |    number and what parking plot you want  |
+            |    to move it to.                         |
+            |                                           |
+            |                                           |
+            |                                           |
+            |___________________________________________|";
+            Console.WriteLine(MoveVehicle);
+        }
+        static void TaBortFordon()
+        {
+            Console.Clear();
+            string RemoveVehicle = @"
+             ___________________________________________
+            | Titel: How to remove Car/MC               |
+            | * To remove the vehicle, enter its        |
+            |   register number, and you will find the  |
+            |   parking lot the vehicle is parked in    |
+            |                                           |
+            |                                           |
+            |                                           |
+            |___________________________________________|";
+            Console.WriteLine(RemoveVehicle);
+        }
     }
+
 }

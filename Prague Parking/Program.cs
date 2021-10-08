@@ -211,23 +211,29 @@ namespace Prague_Parking
         static void CheckIn()
         {
             bool isNoMatch = false;
-            // Console.Clear();
+            string returnMessage = "";
             string vehicleType = "";
             string checkingIn = GetResponse("[1] check in a Car or [2] check in motorcykle or [3] to exit ");
             //Sätter fordonstypen
             SelectVehicleType(ref vehicleType, ref checkingIn);
+            string registrationNumber = "";
 
-            string registrationNumber = GetResponse("Enter your registration number, max 10 characters long: ");
+            //skriver in regnummer + kollar så inga dubletter finns
+            do
+            {
+                registrationNumber = GetResponse("Enter your registration number, max 10 characters long: ");
+                registrationNumber = EnterRegistration(registrationNumber);
+                isNoMatch = SearchForRegistration(ref index, registrationNumber);
 
-            registrationNumber = EnterRegistration(registrationNumber);
-
-
+            } while (isNoMatch == true);
             DateTime timeCheckedIn = DateTime.Now;
 
             //flyttar fordon
             CheckInCorrectPosition(vehicleType, registrationNumber, timeCheckedIn);
 
         }
+
+        
 
         private static void SelectVehicleType(ref string vehicleType, ref string checkingIn)
         {
@@ -431,20 +437,29 @@ namespace Prague_Parking
                     {
                         isFound = true;
                         index = i;
+                        break;
                     }
                 }
                 else if (myVehicles[i].Contains("MC ") && FoundTwoMatches(myVehicles[i]) == true)
                 {
                     string[] splitIfTwo = myVehicles[i].Split('#', '|');
-                    if (splitIfTwo[1] == searchForRegistration || splitIfTwo[4] == searchForRegistration)
+                    if (splitIfTwo[1] == searchForRegistration )
                     {
                         isFound = true;
                         index = i;
+                        break;
+                    }
+                    else if (splitIfTwo[4] == searchForRegistration)
+                    {
+                        isFound = true;
+                        index = i;
+                        break;
                     }
                 }
             }
             return isFound;
         }
+        
 
         #endregion
         public static TimeSpan TotalTimeParked(string vehicle)
@@ -542,7 +557,7 @@ namespace Prague_Parking
                                        (FoundTwoMatches(myVehicles[savedIndex]) == true && myVehicles[savedIndex].Substring(myVehicles[savedIndex].IndexOf("|"), 10).Contains(RegSearch.ToUpper())))
 
                                     {
-                                        
+
                                         Console.WriteLine("Two Vehicles was found in the space, select one to remove");
                                         myVehicles[savedIndex] = OneMCRemove(savedIndex, cki);
                                         userDone = true;
@@ -566,7 +581,7 @@ namespace Prague_Parking
                                         break;
                                     }
 
-                                    
+
                                 }
                                 else
                                 {
@@ -768,7 +783,7 @@ namespace Prague_Parking
         {
             bool firstMatch = false;
             int WindowHeightSetting = 43;
-            
+
             int numberOfMatches = 0;
             int savedindex = 0;
             for (int i = 0; i < myVehicles.Length; i++)
@@ -802,7 +817,7 @@ namespace Prague_Parking
         //-------------------------------Skriver ut sökresultat på en specifik plats----------------------------
         static void PrintSearchResult(int index, bool firstMatch, int WindowHeightSetting)
         {
-             
+
             int WindowWidthSetting = (Console.WindowWidth / 4) * 3;
             
             

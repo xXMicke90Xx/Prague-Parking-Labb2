@@ -323,6 +323,9 @@ namespace Prague_Parking
             while(isFound != true)
             {
 
+
+
+
             }
 
 
@@ -508,6 +511,7 @@ namespace Prague_Parking
             Console.Write(Math.Round((double)checkOutTime.Hours, 0).ToString() + "Hours " + Math.Round(checkOutTime.TotalMinutes, 0 ) + "Minutes");
             Console.ReadLine();
         }
+        
 
         public static void StandardCheckOutMessage(string RegSearch)
         {

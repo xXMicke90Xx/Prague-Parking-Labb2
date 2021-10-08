@@ -290,7 +290,7 @@ namespace Prague_Parking
             Regex matchAccents = new Regex(@"[a-zA-ZÀ-ÖØ-öø-ÿ0-9]{1,10}");
             for (int i = 0; i < registrationNumber.Length; i++)
             {
-                while (!matchAccents.IsMatch(registrationNumber[i].ToString().ToUpper()))
+                while (!matchAccents.IsMatch(registrationNumber[i].ToString().ToUpper()) && !Char.IsLetterOrDigit(registrationNumber[i]))
                 {
                     registrationNumber = GetResponse("Enter your registration number, max 10 characters long: ");
                 }

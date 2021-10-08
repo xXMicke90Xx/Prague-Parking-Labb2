@@ -293,7 +293,7 @@ namespace Prague_Parking
             Regex matchAccents = new Regex(@"[a-zA-ZÀ-ÖØ-öø-ÿ0-9]{1,10}");
             for (int i = 0; i < registrationNumber.Length; i++)
             {
-                while (!matchAccents.IsMatch(registrationNumber[i].ToString().ToUpper()))
+                while (!matchAccents.IsMatch(registrationNumber[i].ToString().ToUpper()) && !Char.IsLetterOrDigit(registrationNumber[i]))
                 {
                     registrationNumber = GetResponse("Enter your registration number, max 10 characters long: ");
                 }
@@ -322,6 +322,9 @@ namespace Prague_Parking
             string searchForRegistration = "";
             while(isFound != true)
             {
+
+
+
 
             }
 
@@ -507,6 +510,7 @@ namespace Prague_Parking
             Console.Write(Math.Round((double)checkOutTime.Hours, 0).ToString() + "Hours " + Math.Round(checkOutTime.TotalMinutes, 0 ) + "Minutes");
             Console.ReadLine();
         }
+        
 
         public static void StandardCheckOutMessage(string RegSearch)
         {

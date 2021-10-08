@@ -11,6 +11,7 @@ namespace Prague_Parking
         public static int index = 0;
         public static int nextSpot = 0;
         public static string input = "";
+        public static int indexNr = 0;
         static void Main(string[] args)
         {
             WindowSetup();
@@ -66,10 +67,10 @@ namespace Prague_Parking
                     CheckIn();
                     break;
                 case "2":
-                    MoveVehicle(index);
+                    MoveVehicle();
                     break;
                 case "3":
-                    CheckOut("CheckOut");
+                    CheckOut("CheckOut", ref index);
                     break;
 
                 case "4":
@@ -194,7 +195,7 @@ namespace Prague_Parking
             Console.WriteLine();
             return choice;
         }
-        static int GetResponseAsNumber(string message, int index)
+        static int GetResponseAsNumber(string message, ref int index)
         {
             Console.Write($"{message} ");
 
@@ -229,7 +230,7 @@ namespace Prague_Parking
             {
                 registrationNumber = GetResponse("Enter your registration number, max 10 characters long: ");
                 registrationNumber = EnterRegistration(registrationNumber);
-                isNoMatch = SearchForRegistration(index, registrationNumber);
+                isNoMatch = SearchForRegistration(ref index, registrationNumber);
 
             } while (isNoMatch == true);
             DateTime timeCheckedIn = DateTime.Now;
@@ -322,17 +323,21 @@ namespace Prague_Parking
         }
 
         #region Move Vehicles(s) and helper functions
-        static void MoveVehicle(int index)
+        static void MoveVehicle()
         {
-            bool isFound = false;
+            
             string searchForRegistration = "";
-            searchForRegistration = CheckOut("Move");
-            InsertMovedVehicle(index, searchForRegistration);
-            Console.WriteLine(index);
-            Console.ReadKey();
+            searchForRegistration = CheckOut("Move", ref index);
+            
+            InsertMovedVehicle(ref index, searchForRegistration);
+
+
+
+
+
         }
 
-        private static int InsertMovedVehicle(int index, string searchForRegistration)
+        private static int InsertMovedVehicle(ref int index, string searchForRegistration)
         {
             int nextSpot;
             do
@@ -340,15 +345,15 @@ namespace Prague_Parking
                 Console.SetCursorPosition((Console.WindowWidth) / 2 - 13, Console.CursorTop);
                 Console.WriteLine("Use a number between 1-100");
                 Console.SetCursorPosition((Console.WindowWidth) / 2 - 23, Console.CursorTop);
-                nextSpot = GetResponseAsNumber("Which spot do you want to move the vehicle to?",index);
+                nextSpot = GetResponseAsNumber("Which spot do you want to move the vehicle to?", ref index);
 
             } while (nextSpot < 0 && nextSpot > 99 || nextSpot == index);
             InsertAtCorrectPosition(index, searchForRegistration, nextSpot);
-            
+
             return nextSpot;
         }
 
-        private static void InsertAtCorrectPosition(int  index, string searchForRegistration, int nextSpot)
+        private static void InsertAtCorrectPosition(int index, string searchForRegistration, int nextSpot)
         {
             for (int i = 0; i < myVehicles.Length; i++)
             {
@@ -410,7 +415,7 @@ namespace Prague_Parking
             }
         }
 
-        private static bool SearchForRegistration(int index, string searchForRegistration)
+        private static bool SearchForRegistration(ref int index, string searchForRegistration)
         {
             bool isFound = false;
 
@@ -527,7 +532,7 @@ namespace Prague_Parking
         }
 
         //------------------------Ska användas för att checka ut bil, varje knapptryck registreras-----------------------------------------------------------
-        static string CheckOut(string check)
+        static string CheckOut(string check, ref int savedIndex)
         {
             ConsoleKeyInfo cki;
             string[] copy = new string[3];
@@ -536,7 +541,7 @@ namespace Prague_Parking
             Console.WriteLine();
             string RegSearch = "";
             bool userDone = false;
-            int savedIndex = -1;
+            savedIndex = -1;
             Instructions(0, cHeight);
             Console.SetCursorPosition(0, cHeight);
             while (userDone == false)
@@ -570,11 +575,12 @@ namespace Prague_Parking
                                         Console.WriteLine("Two Vehicles was found in the space, please select one");
                                         if (check == "Move")
                                         {
-                                            return OneMCRemove(savedIndex, cki, check);
+                                            
+                                            return OneMCRemove(ref savedIndex, cki, check);
                                         }
                                         else
                                         {
-                                            myVehicles[savedIndex] = OneMCRemove(savedIndex, cki, check);
+                                            myVehicles[savedIndex] = OneMCRemove(ref savedIndex, cki, check);
                                             CheckoutMessage(savedIndex + 1);
                                         }
 
@@ -687,7 +693,7 @@ namespace Prague_Parking
             CleanScreen(position);
         }
         //--------------------------------------Vid sökning och två fordon finns på samma plats, låter användaren välja ett fordon------------------------------------------------------- 
-        private static string OneMCRemove(int index, ConsoleKeyInfo cki, string check)
+    private static string OneMCRemove(ref int index, ConsoleKeyInfo cki, string check)
         {
 
             // ColorMatch är en överlagring på en metod "0" och "1" säger vilket färgval man vill ha
@@ -756,23 +762,28 @@ namespace Prague_Parking
                         }
                 }
             }
-
+            
             Console.ResetColor();
             if (choice == 0 && check == "Move")
             {
-                return split[0];
+                return split[0].Substring(split[0].IndexOf('#') + 1, split[0].LastIndexOf('#')-4);
             }
             if (choice == 0 && check == "CheckOut")
             {
-                return split[1];
+                return split[1].Substring(split[1].IndexOf('#') + 1, split[1].LastIndexOf('#') - 4);
+                
             }
             else if (choice == 1 && check == "Move")
             {
-                return split[1];
+                
+                return split[1].Substring(split[1].IndexOf('#') + 1, split[1].LastIndexOf('#') - 4);
+                
+                
             }
             else
             {
-                return split[0];
+                return split[0].Substring(split[0].IndexOf('#') + 1, split[0].LastIndexOf('#') - 4);
+                
             }
         }
 

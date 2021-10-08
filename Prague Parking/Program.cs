@@ -567,6 +567,7 @@ namespace Prague_Parking
                                         Console.WriteLine("Two Vehicles was found in the space, please select one");
                                         if (check == "Move")
                                         {
+
                                             return OneMCRemove(savedIndex, cki, check);
                                         }
                                         else
@@ -757,19 +758,19 @@ namespace Prague_Parking
             Console.ResetColor();
             if (choice == 0 && check == "Move")
             {
-                return split[0];
+                return split[0].Substring(split[0].IndexOf("#", split[0].LastIndexOf("#")));
             }
             if (choice == 0 && check == "CheckOut")
             {
-                return split[1];
+                return split[1].Substring(split[1].IndexOf("#", split[0].LastIndexOf("#")));
             }
             else if (choice == 1 && check == "Move")
             {
-                return split[1];
+                return split[1].Substring(split[1].IndexOf("#", split[0].LastIndexOf("#")));
             }
             else
             {
-                return split[0];
+                return split[0].Substring(split[0].IndexOf("#", split[0].LastIndexOf("#")));
             }
         }
 

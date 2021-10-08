@@ -844,7 +844,8 @@ namespace Prague_Parking
         }
         static void MainHelpMenu()
         {
-            
+            Console.Clear();
+            PrintColumnsOfVehicles();
             string HelpMenu = @"
              ___________________________________________
             |               Titel: Help                 |
@@ -856,6 +857,7 @@ namespace Prague_Parking
             |                                           |
             |___________________________________________|";
             Console.WriteLine(HelpMenu);
+
 
             string userInput = GetResponse("\t\tPlease enter a number between 1-4.");
             string SecondInput = "";

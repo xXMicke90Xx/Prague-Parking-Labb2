@@ -312,10 +312,18 @@ namespace Prague_Parking
         #region Move Vehicles(s) and helper functions
         static void MoveVehicle(int index, int nextSpot)
         {
-            string searchForRegistration = GetResponse("Which registration number do you want to move?");
+            bool isFound = false;
+            string searchForRegistration = "";
+            while(isFound != true)
+            {
+
+            }
+
+
+
             searchForRegistration = searchForRegistration.ToUpper();
             //söker efter inmatat registreringsnummer
-            bool isFound = SearchForRegistration(ref index, searchForRegistration);
+            isFound = SearchForRegistration(ref index, searchForRegistration);
 
 
             //TODO: testa && bryta ut i en funktion
@@ -485,6 +493,13 @@ namespace Prague_Parking
             Console.Write(Math.Round((double)checkOutTime.Hours, 0).ToString() + "Hours " + Math.Round(checkOutTime.TotalMinutes, 0 ) + "Minutes");
             Console.ReadLine();
         }
+
+        public static void StandardCheckOutMessage(string RegSearch)
+        {
+            Console.WriteLine("\n\n");
+            Console.WriteLine("Please enter the registration number of the car you wish to check out.");
+            Console.Write($"Registration number: {RegSearch}");
+        }
         
         //------------------------Ska användas för att checka ut bil, varje knapptryck registreras-----------------------------------------------------------
         static void CheckOut()
@@ -505,10 +520,9 @@ namespace Prague_Parking
                 {
                     SearchTextClearer();
 
+                    StandardCheckOutMessage(RegSearch);
 
-                    Console.WriteLine("\n\n");
-                    Console.WriteLine("Please enter the registration number of the car you wish to check out. Press Enter to choose vehicle  ");
-                    Console.Write($"Registration number: {RegSearch}");
+
                 }
                 cki = Console.ReadKey(true);
 
@@ -559,9 +573,7 @@ namespace Prague_Parking
                                     SearchTextClearer();
 
 
-                                    Console.WriteLine("\n\n");
-                                    Console.WriteLine("Please enter the registration number of the car you wish to check out.");
-                                    Console.Write($"Registration number: {RegSearch}");
+                                    StandardCheckOutMessage(RegSearch);
 
 
                                     Console.SetCursorPosition(0, cHeight);
@@ -597,9 +609,7 @@ namespace Prague_Parking
                                 SearchTextClearer();
 
                                 RegSearch = RegSearch.Remove(RegSearch.Length - 1);
-                                Console.WriteLine("\n\n");
-                                Console.WriteLine("Please enter the registration number of the car you wish to check out.  ");
-                                Console.Write($"Registration number: {RegSearch}");
+                                StandardCheckOutMessage(RegSearch);
 
                                 savedIndex = SearchResult(RegSearch.ToUpper());
                                 Console.SetCursorPosition(0, Console.CursorTop);
@@ -612,10 +622,9 @@ namespace Prague_Parking
                             {
                                 SearchTextClearer();
 
-                                Console.WriteLine("\n\n");
-                                Console.WriteLine("Please enter the registration number of the car you wish to check out.  ");
+                                StandardCheckOutMessage(RegSearch);
                                 RegSearch += cki.KeyChar;
-                                Console.Write($"Registration number: {RegSearch}");
+                                
                                 savedIndex = SearchResult(RegSearch.ToUpper());
                                 Console.SetCursorPosition(0, cHeight);
                             }

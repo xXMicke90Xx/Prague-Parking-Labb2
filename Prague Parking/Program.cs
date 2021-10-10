@@ -70,7 +70,7 @@ namespace Prague_Parking
                     MoveVehicle();
                     break;
                 case "3":
-                    CheckOut("CheckOut", ref index);
+                    VisualSearch("CheckOut", ref index);
                     break;
 
                 case "4":
@@ -323,13 +323,22 @@ namespace Prague_Parking
         }
 
         #region Move Vehicles(s) and helper functions
-        static void MoveVehicle()
+        static string MoveVehicle()
         {
             
             string searchForRegistration = "";
-            searchForRegistration = CheckOut("Move", ref index);
+            searchForRegistration = VisualSearch("Move", ref index);
+            if (searchForRegistration == "")
+            {
+                return "";
+            }
+            else
+            {
+                InsertMovedVehicle(ref index, searchForRegistration);
+                return searchForRegistration;
+            }
+
             
-            InsertMovedVehicle(ref index, searchForRegistration);
 
 
 
@@ -532,7 +541,7 @@ namespace Prague_Parking
         }
 
         //------------------------Ska användas för att checka ut bil, varje knapptryck registreras-----------------------------------------------------------
-        static string CheckOut(string check, ref int savedIndex)
+        static string VisualSearch(string check, ref int savedIndex)
         {
             ConsoleKeyInfo cki;
             string[] copy = new string[3];
@@ -662,7 +671,7 @@ namespace Prague_Parking
                                 MoveOrCheckOutMessage(RegSearch, check);
 
                                 savedIndex = SearchResult(RegSearch.ToUpper());
-                                Console.SetCursorPosition(0, Console.CursorTop);
+                                Console.SetCursorPosition(0, cHeight);
                                 break;
                             }
                         }
@@ -672,8 +681,9 @@ namespace Prague_Parking
                             {
                                 SearchTextClearer();
 
-                                MoveOrCheckOutMessage(RegSearch, check);
+                                
                                 RegSearch += cki.KeyChar;
+                                MoveOrCheckOutMessage(RegSearch, check);
 
                                 savedIndex = SearchResult(RegSearch.ToUpper());
                                 Console.SetCursorPosition(0, cHeight);
@@ -689,7 +699,7 @@ namespace Prague_Parking
         {
             var position = Console.CursorTop;
 
-            Console.SetCursorPosition(0, position);
+            
             CleanScreen(position);
         }
         //--------------------------------------Vid sökning och två fordon finns på samma plats, låter användaren välja ett fordon------------------------------------------------------- 
@@ -697,6 +707,7 @@ namespace Prague_Parking
         {
 
             // ColorMatch är en överlagring på en metod "0" och "1" säger vilket färgval man vill ha
+            //
             bool madeChoice = false;
             byte choice = 0;
             string[] split = myVehicles[index].Split("|");
@@ -764,6 +775,7 @@ namespace Prague_Parking
             }
             
             Console.ResetColor();
+            // ska, beroende på om det ska flyttas ett fordon eller tas bort ett fordon, retunera registreringsnummret, move retunerar det sökta, remove det osökta(för att skrivas ensam på det indexet)
             if (choice == 0 && check == "Move")
             {
                 return split[0].Substring(split[0].IndexOf('#') + 1, split[0].LastIndexOf('#')-4);
@@ -809,12 +821,13 @@ namespace Prague_Parking
         //-------------------------------Ska rensa sökningsfunktionen bara utan att röra resten----------------------------------
         static void CleanScreen(int windowHeight)
         {
+            
             Console.SetCursorPosition(0, windowHeight - 3);
-            for (int i = 0; i < 11; i++)
+            for (int i = 0; i < 15; i++)
             {
                 Console.Write(new string(' ', Console.WindowWidth));
             }
-
+            
             Console.SetCursorPosition(0, windowHeight - 4);
 
         }
@@ -823,12 +836,17 @@ namespace Prague_Parking
         {
             bool firstMatch = false;
             int WindowHeightSetting = 43;
-
+            string tempReg = "";
             int numberOfMatches = 0;
             int savedindex = 0;
             for (int i = 0; i < myVehicles.Length; i++)
             {
-                if (myVehicles[i].Contains(toCheck) && myVehicles[i] != "Ledig" && numberOfMatches < 10)
+                if (myVehicles[i] != "Ledig")
+                {
+                    tempReg = myVehicles[i].Substring(myVehicles[i].IndexOf('#') + 1, myVehicles[i].LastIndexOf('#') - 4);
+                }
+
+                if (tempReg.Contains(toCheck) && numberOfMatches < 10 && myVehicles[i] != "Ledig")
                 {
                     if (firstMatch == false)
                     {

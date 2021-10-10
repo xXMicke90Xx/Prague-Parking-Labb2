@@ -330,12 +330,12 @@ namespace Prague_Parking
             searchForRegistration = VisualSearch("Move", ref index);
             if (searchForRegistration == "")
             {
-                return "";
+                return "";// Används ifall användaren valt att avbryta sökningen men ESC
             }
             else
             {
                 InsertMovedVehicle(ref index, searchForRegistration);
-                return searchForRegistration;
+                return searchForRegistration; // Gör ingenting
             }
 
             

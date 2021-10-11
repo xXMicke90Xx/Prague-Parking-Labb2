@@ -119,11 +119,11 @@ namespace Prague_Parking
         {
 
             string frameForColumns = "";
-            Console.WriteLine(frameForColumns.PadRight(Console.WindowWidth - 3, '_'));
+            Console.WriteLine(frameForColumns.PadRight(Console.WindowWidth, '_'));
             Console.WriteLine();
             for (int i = 0; i < 25; i++)
             {
-                Console.Write("          ");
+                Console.Write("|         ");
                 //Skriver ut 1-25                           
                 ColorMatch(myVehicles[i]);
                 Console.Write($"{(i < 9 ? "|" + (i + 1) + " " : "|" + (i + 1))} {myVehicles[i].PadRight((Console.WindowWidth / 3) - 19)}|");
@@ -136,11 +136,15 @@ namespace Prague_Parking
                 //Skriver ut 76 - 100
                 ColorMatch(myVehicles[i + (myVehicles.Length / 4) * 3]);
                 Console.Write($"{i + ((myVehicles.Length / 4) * 3) + 1}{(i == 24 ? "" : " ")} {myVehicles[i + (myVehicles.Length / 4) * 3]}");
-
-                Console.WriteLine();
+                Console.SetCursorPosition(Console.WindowWidth - 1, Console.CursorTop);
                 Console.ResetColor();
+                Console.WriteLine("|");
+                
+                
+
+                
             }
-            Console.WriteLine(frameForColumns.PadRight(Console.WindowWidth - 3, '_'));
+            Console.WriteLine(frameForColumns.PadRight(Console.WindowWidth, '_'));
         }
 
         //---------------------Bestämmer Konsoll färg ---------------------------------
@@ -490,7 +494,7 @@ namespace Prague_Parking
             }
             Console.SetCursorPosition((Console.WindowWidth / 2), (Console.WindowHeight / 2) - 1);
             Console.Write(index);
-            Console.SetCursorPosition((Console.WindowWidth / 2) - checkOutMessage[0].Length/2, (Console.WindowHeight / 2) + 3);
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 8, (Console.WindowHeight / 2) + 3);
             Console.Write(Math.Round((double)checkOutTime.Hours, 0).ToString() + "Hours " + Math.Round(checkOutTime.TotalMinutes, 0) + "Minutes");
             Console.ReadLine();
         }

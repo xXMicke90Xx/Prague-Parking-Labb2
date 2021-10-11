@@ -11,20 +11,17 @@ namespace Prague_Parking
         public static int index = 0;
         public static int nextSpot = 0;
         public static string input = "";
-        //public static int indexNr = 0;
         static void Main(string[] args)
         {
             WindowSetup();
             FillNullSpaces();
             Run();
-
         }
 
         private static void Run()
         {
             while (input != "6")
             {
-
                 PrintColumnsOfVehicles();
                 MainMenu();
                 input = GetResponse("Please enter a choice 1-5, or 6 to exit: ");
@@ -61,7 +58,7 @@ namespace Prague_Parking
             switch (input)
             {
                 case "1":
-                    CheckIn();
+                    CheckInVehicle();
                     break;
                 case "2":
                     MoveVehicle();
@@ -217,7 +214,7 @@ namespace Prague_Parking
 
 
         #region CheckIn and helper functions to that
-        static void CheckIn()
+        static void CheckInVehicle()
         {
             bool isNoMatch = false;
             string vehicleType = "";
@@ -299,6 +296,8 @@ namespace Prague_Parking
             Regex matchAccents = new Regex(@"[a-zA-ZÀ-ÖØ-öø-ÿ0-9]");
             for (int i = 0; i < registrationNumber.Length; i++)
             {
+
+                //byt till isnullorempty
                 while (registrationNumber == null || registrationNumber == "" || !matchAccents.IsMatch(registrationNumber[i].ToString().ToUpper()) && !Char.IsLetterOrDigit(registrationNumber[i]) || registrationNumber.Length > 10)
                 {
                     registrationNumber = GetResponse("Enter your registration number, max 10 characters long: ");
@@ -356,6 +355,7 @@ namespace Prague_Parking
         {
             for (int i = 0; i < myVehicles.Length; i++)
             {
+                //sätter in en bil på rätt plats
                 if (myVehicles[nextSpot].Contains("Ledig") && myVehicles[index].Contains("CAR"))
                 {
                     myVehicles[nextSpot] = myVehicles[index];
@@ -372,6 +372,7 @@ namespace Prague_Parking
                 //om två motorcyklar finns finns
                 else if (myVehicles[nextSpot].Contains("Ledig") && myVehicles[index].Contains("MC ") && FoundTwoMatches(myVehicles[index]) == true)
                 {
+                    //om första platsen innehåller rätt regnummer
                     string[] tempHolder = myVehicles[index].Split("|");
                     if (tempHolder[0].Contains(searchForRegistration))
                     {
@@ -382,6 +383,7 @@ namespace Prague_Parking
                             break;
                         }
                     }
+                    //om andra platsen innehåller rätt regnummer
                     else if (tempHolder[1].Contains(searchForRegistration))
                     {
                         if (!myVehicles[nextSpot].Contains("CAR"))
@@ -455,7 +457,6 @@ namespace Prague_Parking
         //---------Beräknar tiden från incheckning till utcheckning--------------------
         public static TimeSpan TotalTimeParked(string vehicle)
         {
-
             DateTime checkOutTime = DateTime.Now;
             DateTime checkInTime = Convert.ToDateTime(vehicle.Substring(vehicle.Length - 6));
 
@@ -522,25 +523,22 @@ namespace Prague_Parking
         static string VisualSearch(string check, ref int index)
         {
             ConsoleKeyInfo cki;
-            string[] copy = new string[3];
 
-            int cHeight = 43; // Standardvärdet för utskriftshöjd
+            int cursorHeight = 43; // Standardvärdet för utskriftshöjd
             Console.WriteLine();
             string RegSearch = "";
             bool userDone = false;
             index = -1;
-            Instructions(0, cHeight);
-            Console.SetCursorPosition(0, cHeight);
+            Instructions(0, cursorHeight);
+            Console.SetCursorPosition(0, cursorHeight);
             while (userDone == false)
             {
                 if (RegSearch == "")
                 {
                     SearchTextClearer();
-
                     MoveOrCheckOutMessage(RegSearch, check);
-
-
                 }
+
                 cki = Console.ReadKey(true);
 
                 switch (cki.Key)
@@ -553,16 +551,12 @@ namespace Prague_Parking
                                 if (cki.Key == ConsoleKey.Enter)
                                 {
 
-
                                     if ((FoundTwoMatches(myVehicles[index]) == true && myVehicles[index].Substring(0, myVehicles[index].IndexOf('|')).Contains(RegSearch.ToUpper())) ||
-                                       (FoundTwoMatches(myVehicles[index]) == true && myVehicles[index].Substring(myVehicles[index].IndexOf("|"), 10).Contains(RegSearch.ToUpper())))
-
+                                       (FoundTwoMatches(myVehicles[index]) == true && myVehicles[index].Substring(myVehicles[index].IndexOf("|"), 14).Contains(RegSearch.ToUpper())))
                                     {
-
                                         Console.WriteLine("Two Vehicles was found in the space, please select one");
                                         if (check == "Move")
                                         {
-                                            
                                             return OneMCRemove(ref index, cki, check);
                                         }
                                         else
@@ -570,9 +564,7 @@ namespace Prague_Parking
                                             myVehicles[index] = OneMCRemove(ref index, cki, check);
                                             CheckoutMessage(index + 1);
                                         }
-
                                         userDone = true;
-
                                     }
                                     else if (myVehicles[index].Substring(0, 3) == "CAR")
                                     {
@@ -607,18 +599,12 @@ namespace Prague_Parking
                                     {
                                         break;
                                     }
-
-
                                 }
                                 else
                                 {
                                     SearchTextClearer();
-
-
                                     MoveOrCheckOutMessage(RegSearch, check);
-
-
-                                    Console.SetCursorPosition(0, cHeight);
+                                    Console.SetCursorPosition(0, cursorHeight);
                                     break;
                                 }
 
@@ -628,8 +614,6 @@ namespace Prague_Parking
                             {
                                 break;
                             }
-
-
                         }
 
                     case ConsoleKey.Escape:
@@ -644,12 +628,11 @@ namespace Prague_Parking
                             else
                             {
                                 SearchTextClearer();
-
                                 RegSearch = RegSearch.Remove(RegSearch.Length - 1);
                                 MoveOrCheckOutMessage(RegSearch, check);
                                 Box();
                                 index = SearchResult(RegSearch.ToUpper());
-                                Console.SetCursorPosition(0, cHeight);
+                                Console.SetCursorPosition(0, cursorHeight);
                                 break;
                             }
                         }
@@ -658,13 +641,11 @@ namespace Prague_Parking
                             if (char.IsLetterOrDigit(cki.KeyChar))
                             {
                                 SearchTextClearer();
-
-                                
                                 RegSearch += cki.KeyChar;
                                 MoveOrCheckOutMessage(RegSearch, check);
                                 Box();
                                 index = SearchResult(RegSearch.ToUpper());
-                                Console.SetCursorPosition(0, cHeight);
+                                Console.SetCursorPosition(0, cursorHeight);
                             }
                             break;
                         }
@@ -708,7 +689,6 @@ namespace Prague_Parking
                                 ColorMatch(1);
                                 Console.Write($"{split[0]} | ");
                                 ColorMatch(0);
-
                                 Console.Write($"{split[1]}");
 
                                 choice = 1;
@@ -718,7 +698,6 @@ namespace Prague_Parking
                             {
                                 break;
                             }
-
                         }
                     case ConsoleKey.LeftArrow:
                         {
@@ -762,16 +741,12 @@ namespace Prague_Parking
                 
             }
             else if (choice == 1 && check == "Move")
-            {
-                
+            { 
                 return split[1].Substring(split[1].IndexOf('#') + 1, split[1].LastIndexOf('#') - 4);
-                
-                
             }
             else
             {
                 return split[0].Substring(split[0].IndexOf('#') + 1, split[0].LastIndexOf('#') - 4);
-                
             }
         }
 
@@ -856,7 +831,6 @@ namespace Prague_Parking
 
             if (firstMatch == false)
             {
-
                 Console.SetCursorPosition(WindowWidthSetting, WindowHeightSetting);
                 ColorMatch(0);
                 Console.Write(myVehicles[index]);
@@ -900,31 +874,45 @@ namespace Prague_Parking
 
         static void MainHelpMenu()
         {
+            string userInput = "";
+            string SecondInput = "";
             Console.Clear();
             PrintColumnsOfVehicles();
-            string HelpMenu = @"
-             ___________________________________________
-            |               Titel: Help                 |
-            |                                           |
-            | [1] How to check in Car/MC                |
-            | [2] How to move Car/MC                    |
-            | [3] How to remove Car/MC                  |
-            | [4] Exit                                  |
-            |                                           |
-            |___________________________________________|";
-            Console.WriteLine(HelpMenu);
+
+            string[] menu = new string[11] {
+                "_____________________________________________",
+                "|        Titel: Help                        |",
+                "|                                           |",
+                "|        [1] How to check in Car/MC         |",
+                "|        [2] How to move Car/MC             |",
+                "|        [3] How to remove Car/MC           |",
+                "|        [4] Exit                           |",
+                "|                                           |",
+                "|                                           |",
+                "|                                           |",
+                "|___________________________________________|"};
 
 
-            string userInput = GetResponse("\t\tPlease enter a number between 1-4.");
-            string SecondInput = "";
+            for (int i = 0; i < menu.Length; i++)
+            {
+                Console.WriteLine(menu[i].PadLeft(Console.WindowWidth / 2 + menu[0].Length/2));
+            }
+
+
+            do
+            {
+                userInput = GetResponse("\tPlease enter a number between 1-4: ");
+
+            } while (userInput != "1" && userInput != "2" && userInput != "3" && userInput != "4");
 
             do
             {
                 switch (userInput)
                 {
                     case "1":
+                      
                         SkrivaIn();
-                        SecondInput = GetResponse("\t\tPlease press X to go back.");
+                        SecondInput = GetResponse("\t\tPlease press X to go back. ");
                         if (SecondInput == "X" || SecondInput == "x")
                         {
                             MainHelpMenu();
@@ -932,7 +920,8 @@ namespace Prague_Parking
                         break;
                     case "2":
                         FlyttaFordon();
-                        SecondInput = GetResponse("\t\tPlease press X to go back.");
+           
+                        SecondInput = GetResponse("\t\tPlease press X to go back. ");
                         if (SecondInput == "X" || SecondInput == "x")
                         {
                             MainHelpMenu();
@@ -940,7 +929,8 @@ namespace Prague_Parking
                         break;
                     case "3":
                         TaBortFordon();
-                        SecondInput = GetResponse("\t\tPlease press X to go back.");
+           
+                        SecondInput = GetResponse("\t\tPlease press X to go back. ");
                         if (SecondInput == "X" || SecondInput == "x")
                         {
                             MainHelpMenu();
@@ -959,6 +949,7 @@ namespace Prague_Parking
         static void SkrivaIn()
         {
             Console.Clear();
+            PrintColumnsOfVehicles();
             string CheckInMenu = @"
              ___________________________________________
             | Titel: How to check in Car/MC             |
@@ -974,6 +965,7 @@ namespace Prague_Parking
         static void FlyttaFordon()
         {
             Console.Clear();
+            PrintColumnsOfVehicles();
             string MoveVehicle = @"
              ___________________________________________
             | Titel: How to move Car/MC                 |
@@ -989,6 +981,7 @@ namespace Prague_Parking
         static void TaBortFordon()
         {
             Console.Clear();
+            PrintColumnsOfVehicles();
             string RemoveVehicle = @"
              ___________________________________________
             | Titel: How to remove Car/MC               |
@@ -1002,5 +995,4 @@ namespace Prague_Parking
             Console.WriteLine(RemoveVehicle);
         }
     }
-
 }

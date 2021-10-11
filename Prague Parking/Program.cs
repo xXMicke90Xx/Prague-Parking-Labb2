@@ -11,7 +11,7 @@ namespace Prague_Parking
         public static int index = 0;
         public static int nextSpot = 0;
         public static string input = "";
-        public static int indexNr = 0;
+        //public static int indexNr = 0;
         static void Main(string[] args)
         {
             WindowSetup();
@@ -296,7 +296,7 @@ namespace Prague_Parking
         //--------------------------Kontrollerar så regnummret är godkänt----------------------------------
         private static string EnterRegistration(string registrationNumber)
         {
-            Regex matchAccents = new Regex(@"[a-zA-ZÀ-ÖØ-öø-ÿ0-9]{1,10}");
+            Regex matchAccents = new Regex(@"[a-zA-ZÀ-ÖØ-öø-ÿ0-9]");
             for (int i = 0; i < registrationNumber.Length; i++)
             {
                 while (registrationNumber == null || registrationNumber == "" || !matchAccents.IsMatch(registrationNumber[i].ToString().ToUpper()) && !Char.IsLetterOrDigit(registrationNumber[i]) || registrationNumber.Length > 10)
@@ -304,7 +304,6 @@ namespace Prague_Parking
                     registrationNumber = GetResponse("Enter your registration number, max 10 characters long: ");
                     i = 0;
                 }
-
             }
 
             return registrationNumber.ToUpper();
@@ -438,7 +437,6 @@ namespace Prague_Parking
                     {
                         isFound = true;
                         index = i;
-
                         break;
                     }
                     else if (splitIfTwo[4] == searchForRegistration)

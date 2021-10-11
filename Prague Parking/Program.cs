@@ -126,13 +126,13 @@ namespace Prague_Parking
                 Console.Write("|         ");
                 //Skriver ut 1-25                           
                 ColorMatch(myVehicles[i]);
-                Console.Write($"{(i < 9 ? "|" + (i + 1) + " " : "|" + (i + 1))} {myVehicles[i].PadRight((Console.WindowWidth / 3) - 19)}|");
+                Console.Write($"{(i < 9 ? "|" + (i + 1) + " " : "|" + (i + 1))} {myVehicles[i].PadRight((Console.WindowWidth / 4))}|");
                 //Skriver ut 26 - 50
                 ColorMatch(myVehicles[i + myVehicles.Length / 4]);
-                Console.Write($"{i + myVehicles.Length / 4 + 1} {myVehicles[i + myVehicles.Length / 4].PadRight((Console.WindowWidth / 3) - 19)}|");
+                Console.Write($"{i + myVehicles.Length / 4 + 1} {myVehicles[i + myVehicles.Length / 4].PadRight((Console.WindowWidth / 4))}|");
                 //skriver ut 51- 75
                 ColorMatch(myVehicles[i + myVehicles.Length / 2]);
-                Console.Write($"{i + myVehicles.Length / 2 + 1} {myVehicles[i + myVehicles.Length / 2].PadRight((Console.WindowWidth / 3) - 19)}|");
+                Console.Write($"{i + myVehicles.Length / 2 + 1} {myVehicles[i + myVehicles.Length / 2].PadRight((Console.WindowWidth / 4))}|");
                 //Skriver ut 76 - 100
                 ColorMatch(myVehicles[i + (myVehicles.Length / 4) * 3]);
                 Console.Write($"{i + ((myVehicles.Length / 4) * 3) + 1}{(i == 24 ? "" : " ")} {myVehicles[i + (myVehicles.Length / 4) * 3]}");

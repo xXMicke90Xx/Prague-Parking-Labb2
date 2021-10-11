@@ -119,7 +119,7 @@ namespace Prague_Parking
         {
 
             string frameForColumns = "";
-            Console.WriteLine(frameForColumns.PadRight(Console.WindowWidth - 3, '_'));
+            Console.WriteLine(frameForColumns.PadRight(Console.WindowWidth, '_'));
             Console.WriteLine();
             for (int i = 0; i < 25; i++)
             {
@@ -140,7 +140,7 @@ namespace Prague_Parking
                 Console.WriteLine();
                 Console.ResetColor();
             }
-            Console.WriteLine(frameForColumns.PadRight(Console.WindowWidth - 3, '_'));
+            Console.WriteLine(frameForColumns.PadRight(Console.WindowWidth, '_'));
         }
 
         //---------------------Bestämmer Konsoll färg ---------------------------------
@@ -492,7 +492,7 @@ namespace Prague_Parking
             }
             Console.SetCursorPosition((Console.WindowWidth / 2), (Console.WindowHeight / 2) - 1);
             Console.Write(index);
-            Console.SetCursorPosition((Console.WindowWidth / 2) - checkOutMessage[0].Length/2, (Console.WindowHeight / 2) + 3);
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 8, (Console.WindowHeight / 2) + 3);
             Console.Write(Math.Round((double)checkOutTime.Hours, 0).ToString() + "Hours " + Math.Round(checkOutTime.TotalMinutes, 0) + "Minutes");
             Console.ReadLine();
         }

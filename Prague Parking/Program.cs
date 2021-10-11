@@ -218,7 +218,6 @@ namespace Prague_Parking
         static void CheckIn()
         {
             bool isNoMatch = false;
-            string returnMessage = "";
             string vehicleType = "";
             string checkingIn = GetResponse("[1] check in a Car or [2] check in motorcykle or [3] to exit ");
             //Sätter fordonstypen

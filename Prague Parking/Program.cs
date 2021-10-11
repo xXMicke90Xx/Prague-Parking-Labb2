@@ -17,10 +17,7 @@ namespace Prague_Parking
             WindowSetup();
             FillNullSpaces();
             Run();
-            
-         
-               
-            
+
         }
 
         private static void Run()
@@ -298,7 +295,7 @@ namespace Prague_Parking
             Regex matchAccents = new Regex(@"[a-zA-ZÀ-ÖØ-öø-ÿ0-9]{1,10}");
             for (int i = 0; i < registrationNumber.Length; i++)
             {
-                while (registrationNumber == null || registrationNumber == "" || !matchAccents.IsMatch(registrationNumber[i].ToString().ToUpper()) && !Char.IsLetterOrDigit(registrationNumber[i]))
+                while (registrationNumber == null || registrationNumber == "" || !matchAccents.IsMatch(registrationNumber[i].ToString().ToUpper()) && !Char.IsLetterOrDigit(registrationNumber[i]) || registrationNumber.Length > 10)
                 {
                     registrationNumber = GetResponse("Enter your registration number, max 10 characters long: ");
                     i = 0;
@@ -464,7 +461,6 @@ namespace Prague_Parking
 
 
             return diff;
-
         }
         //------------------------------Skriver ut ruta för men information för användare om vart fordon finns och hur länge den har stått där-------------------------------------------
         static void CheckoutMessage(int index)
@@ -842,8 +838,6 @@ namespace Prague_Parking
                         numberOfMatches++;
                         WindowHeightSetting++;
                     }
-
-
                 }
             }
             if (firstMatch == true)
@@ -865,19 +859,11 @@ namespace Prague_Parking
                 ColorMatch(0);
                 Console.Write(myVehicles[index]);
                 Console.ResetColor();
-                
-
-
-
             }
             else
-            {
-                
+            {       
                 Console.SetCursorPosition(WindowWidthSetting, WindowHeightSetting+1);
                 Console.Write(myVehicles[index]);
-
-
-
             }
 
         }
@@ -903,15 +889,12 @@ namespace Prague_Parking
                 "------------------------------"
             };
 
-
-            
             for (int i = 0; i < box.Length; i++)
             {
                 Console.SetCursorPosition(Console.WindowWidth / 4 * 3 - 1, 41 + i);
                 Console.Write(box[i]);
             }
         }
-
 
         static void MainHelpMenu()
         {

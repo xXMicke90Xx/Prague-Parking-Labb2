@@ -135,7 +135,7 @@ namespace Prague_Parking
                 Console.Write($"{i + ((myVehicles.Length / 4) * 3) + 1}{(i == 24 ? "" : " ")} {myVehicles[i + (myVehicles.Length / 4) * 3]}");
                 Console.SetCursorPosition(Console.WindowWidth - 1, Console.CursorTop);
                 Console.ResetColor();
-                Console.WriteLine("|");
+                Console.Write("|");
                 
                 
 

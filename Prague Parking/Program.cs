@@ -115,12 +115,13 @@ namespace Prague_Parking
         static void PrintColumnsOfVehicles()
         {
 
+            int toLong = Console.WindowWidth - (((Console.WindowWidth / 4) * 3) + 24);
             string frameForColumns = "";
             Console.WriteLine(frameForColumns.PadRight(Console.WindowWidth, '_'));
             Console.WriteLine();
             for (int i = 0; i < 25; i++)
             {
-                Console.Write("|         ");
+                Console.Write("|     ");
                 //Skriver ut 1-25                           
                 ColorMatch(myVehicles[i]);
                 Console.Write($"{(i < 9 ? "|" + (i + 1) + " " : "|" + (i + 1))} {myVehicles[i].PadRight((Console.WindowWidth / 4))}|");
@@ -132,9 +133,11 @@ namespace Prague_Parking
                 Console.Write($"{i + myVehicles.Length / 2 + 1} {myVehicles[i + myVehicles.Length / 2].PadRight((Console.WindowWidth / 4))}|");
                 //Skriver ut 76 - 100
                 ColorMatch(myVehicles[i + (myVehicles.Length / 4) * 3]);
-                Console.Write($"{i + ((myVehicles.Length / 4) * 3) + 1}{(i == 24 ? "" : " ")} {myVehicles[i + (myVehicles.Length / 4) * 3]}");
+                bool twoMC = FoundTwoMatches(myVehicles [i + myVehicles.Length / 4 * 3]);
+                
+                Console.Write($"{i + ((myVehicles.Length / 4) * 3) + 1}{(i == 24 ? "" : " ")} {(twoMC == true && myVehicles[i + myVehicles.Length / 4 * 3].Length >= toLong? ShortenMatch(myVehicles[i + myVehicles.Length/4 * 3]): myVehicles[i + (myVehicles.Length / 4) * 3])}");
                 Console.SetCursorPosition(Console.WindowWidth - 1, Console.CursorTop);
-                Console.ResetColor();
+                    Console.ResetColor();
                 Console.Write("|");
 
 
@@ -142,6 +145,16 @@ namespace Prague_Parking
 
             }
             Console.WriteLine(frameForColumns.PadRight(Console.WindowWidth, '_'));
+        }
+        static string ShortenMatch(string vehicles)
+        {
+            string [] split = new string[2];
+            split = vehicles.Split("|");
+
+            split[0] = split[0].Substring(0, split[0].LastIndexOf("#"));
+            split[1] = split[1].Substring(0, split[1].LastIndexOf("#"));
+            
+            return $@"{split[0]}|{split[1]}";
         }
 
         //---------------------Bestämmer Konsoll färg ---------------------------------

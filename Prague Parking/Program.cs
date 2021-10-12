@@ -871,14 +871,13 @@ namespace Prague_Parking
                 Console.Write(box[i]);
             }
         }
-
+        //---------------------------------------------Hjälp Menyn---------------------------------------
         static void MainHelpMenu()
         {
             string userInput = "";
             string SecondInput = "";
             Console.Clear();
             PrintColumnsOfVehicles();
-
             string[] menu = new string[11] {
                 "_____________________________________________",
                 "|        Titel: Help                        |",
@@ -892,25 +891,21 @@ namespace Prague_Parking
                 "|                                           |",
                 "|___________________________________________|"};
 
-
+            //Centrerar menyn.
             for (int i = 0; i < menu.Length; i++)
             {
                 Console.WriteLine(menu[i].PadLeft(Console.WindowWidth / 2 + menu[0].Length/2));
             }
-
-
             do
             {
                 userInput = GetResponse("\tPlease enter a number between 1-4: ");
 
-            } while (userInput != "1" && userInput != "2" && userInput != "3" && userInput != "4");
-
+            } while (userInput != "1" && userInput != "2" && userInput != "3" && userInput != "4");      
             do
             {
                 switch (userInput)
                 {
                     case "1":
-                      
                         SkrivaIn();
                         SecondInput = GetResponse("Please press X to go back. ");
                         if (SecondInput == "X" || SecondInput == "x")
@@ -920,7 +915,6 @@ namespace Prague_Parking
                         break;
                     case "2":
                         FlyttaFordon();
-           
                         SecondInput = GetResponse("Please press X to go back. ");
                         if (SecondInput == "X" || SecondInput == "x")
                         {
@@ -929,7 +923,6 @@ namespace Prague_Parking
                         break;
                     case "3":
                         TaBortFordon();
-           
                         SecondInput = GetResponse("Please press X to go back. ");
                         if (SecondInput == "X" || SecondInput == "x")
                         {
@@ -950,25 +943,23 @@ namespace Prague_Parking
         {
             Console.Clear();
             PrintColumnsOfVehicles();
-
             string[] CheckInMenu = new string[11] {
                 "_____________________________________________",
                 "|      Titel: How to check in Car/MC        |",
                 "|                                           |",
                 "|  *To check in the car, first you need to  |",
-                "|   enter its registernumber and the        |",
-                "|   computer will find an empty place for   |",
-                "|   the vehicle.                            |",
-                "|                                           |",
+                "|   choose what type of vehicle you want to |",
+                "|   park, and then enter its register-      |",
+                "|   -number and the computer will find a    |",
+                "|    empty space                            |",
                 "|                                           |",
                 "|                                           |",
                 "|___________________________________________|"};
-
+           
             for (int i = 0; i < CheckInMenu.Length; i++)
             {
                 Console.WriteLine(CheckInMenu[i].PadLeft(Console.WindowWidth / 2 + CheckInMenu[0].Length / 2));
             }
-           
         }
         static void FlyttaFordon()
         {
@@ -1002,7 +993,7 @@ namespace Prague_Parking
                 "|                                           |",
                 "|  *To remove the vehicle, enter its        |",
                 "|   register number, and you will find the  |",
-                "|    parking lot the vehicle is parked in   |",
+                "|   parking lot the vehicle is parked in    |",
                 "|                                           |",
                 "|                                           |",
                 "|                                           |",

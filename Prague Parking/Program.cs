@@ -146,6 +146,7 @@ namespace Prague_Parking
             }
             Console.WriteLine(frameForColumns.PadRight(Console.WindowWidth, '_'));
         }
+        //------------------------Kortar ner strängen så den inte går utanför från skärmen--------------------------
         static string ShortenMatch(string vehicles)
         {
             string [] split = new string[2];
@@ -860,7 +861,7 @@ namespace Prague_Parking
                 }
             }
         }
-
+        //--------------------Skriver ut en box---------------------------------------------------------
         public static void Box()
         {
             string[] box = new string[4]

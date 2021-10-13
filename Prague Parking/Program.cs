@@ -6,7 +6,7 @@ namespace Prague_Parking
 {
     class Program
     {
-
+        // Projekt med Mohammed Karimi, Patrik Beijar Odh och Mikael Nilsson.
         public static string[] myVehicles = new string[100];
         public static int index = 0;
         public static int nextSpot = 0;

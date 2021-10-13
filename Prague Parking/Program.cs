@@ -613,7 +613,7 @@ namespace Prague_Parking
         }
         //----------------------------Ska, beroende på om move eller checkout är aktivt, skicka tillbaka en sträng med regnummer eller ta bort ett fordon-------------------------
         public static string UserHasChosen(string check, ref int index, ConsoleKeyInfo cki, string regSearch)
-        {           //Denna if sats kollar helt enkelt ifal det finns 2 mc på platsen samt om regSearch finns i någon av fordonens regplåt
+        {           //Denna if sats kollar helt enkelt ifall det finns 2 mc på platsen samt om regSearch finns i någon av fordonens regplåt
             if ((FoundTwoMatches(myVehicles[index]) == true && myVehicles[index].Substring(0, myVehicles[index].IndexOf('|')).Contains(regSearch.ToUpper())) ||
                                    (FoundTwoMatches(myVehicles[index]) == true && myVehicles[index].Substring(myVehicles[index].IndexOf("|"), 14).Contains(regSearch.ToUpper())))
             {
@@ -799,9 +799,23 @@ namespace Prague_Parking
             int savedindex = 0;
             for (int i = 0; i < myVehicles.Length; i++)
             {
-                if (myVehicles[i] != "Ledig")
+                if (myVehicles[i] != "Ledig" && FoundTwoMatches(myVehicles[i]) != true)
                 {
                     tempReg = myVehicles[i].Substring(myVehicles[i].IndexOf('#') + 1, myVehicles[i].LastIndexOf('#') - 4);
+                }
+                else if (FoundTwoMatches(myVehicles[i]) == true)
+                {
+                    string[] split = myVehicles[i].Split("|");
+                    if (split[1].Substring(split[1].IndexOf('#') + 1, split[1].LastIndexOf('#') - 4).Contains(toCheck))
+                    {
+                        tempReg = split[1].Substring(split[1].IndexOf('#') + 1, split[1].LastIndexOf('#') - 4);
+                    }
+                    else if (split[0].Substring(split[0].IndexOf('#') + 1, split[0].LastIndexOf('#') - 4).Contains(toCheck))
+                    {
+                        tempReg = split[0].Substring(split[0].IndexOf('#') + 1, split[0].LastIndexOf('#') - 4);
+                       
+                    }
+                    
                 }
 
                 if (tempReg.Contains(toCheck) && numberOfMatches < 10 && myVehicles[i] != "Ledig")

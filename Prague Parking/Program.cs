@@ -226,7 +226,6 @@ namespace Prague_Parking
         }
         // -------------------------Ska ta emot och lagra bilar på tillgänglig plats--------------------------
 
-
         #region CheckIn and helper functions to that
         static void CheckInVehicle()
         {
@@ -917,17 +916,19 @@ namespace Prague_Parking
             {
                 Console.WriteLine(menu[i].PadLeft(Console.WindowWidth / 2 + menu[0].Length / 2));
             }
+            //Om personen inte anger ett tal mellan 1-4 så kommer datorn fråga efter ett nummber mellan 1-4.
             do
             {
                 userInput = GetResponse("\tPlease enter a number between 1-4: ");
 
             } while (userInput != "1" && userInput != "2" && userInput != "3" && userInput != "4");      
+
             do
             {
                 switch (userInput)
                 {
                     case "1":
-                        SkrivaIn();
+                        CheckInMenu();
                         SecondInput = GetResponse("Please press X to go back. ");
                         if (SecondInput == "X" || SecondInput == "x")
                         {
@@ -935,7 +936,7 @@ namespace Prague_Parking
                         }
                         break;
                     case "2":
-                        FlyttaFordon();
+                        MoveVehicleMenu();
                         SecondInput = GetResponse("Please press X to go back. ");
                         if (SecondInput == "X" || SecondInput == "x")
                         {
@@ -943,7 +944,7 @@ namespace Prague_Parking
                         }
                         break;
                     case "3":
-                        TaBortFordon();
+                        RemoveVehicleMenu();
                         SecondInput = GetResponse("Please press X to go back. ");
                         if (SecondInput == "X" || SecondInput == "x")
                         {
@@ -960,35 +961,37 @@ namespace Prague_Parking
 
             } while (userInput != "X" || userInput != "x");
         }
-        static void SkrivaIn()
+        static void CheckInMenu()
         {
+            //Clearar konsolen, skriver ut garaget och sedan info menyn.
             Console.Clear();
             PrintColumnsOfVehicles();
             string[] CheckInMenu = new string[11] {
                 "_____________________________________________",
-                "|      Titel: How to check in Car/MC        |",
+                "|           How to check in Car/MC          |",
                 "|                                           |",
                 "|  *To check in the car, first you need to  |",
                 "|   choose what type of vehicle you want to |",
                 "|   park, and then enter its register-      |",
                 "|   -number and the computer will find a    |",
-                "|    empty space                            |",
+                "|   empty space                             |",
                 "|                                           |",
                 "|                                           |",
                 "|___________________________________________|"};
-           
+            //Centrerar menyn.
             for (int i = 0; i < CheckInMenu.Length; i++)
             {
                 Console.WriteLine(CheckInMenu[i].PadLeft(Console.WindowWidth / 2 + CheckInMenu[0].Length / 2));
             }
         }
-        static void FlyttaFordon()
+        static void MoveVehicleMenu()
         {
+            //Clearar konsolen, skriver ut garaget och sedan info menyn.
             Console.Clear();
             PrintColumnsOfVehicles();
             string[] MoveVehicle = new string[11] {
                 "_____________________________________________",
-                "|      Titel: How to move Car/MC            |",
+                "|            How to move Car/MC             |",
                 "|                                           |",
                 "|  *To move the car, enter its register-    |",
                 "|   number and what parking plot you want   |",
@@ -998,19 +1001,20 @@ namespace Prague_Parking
                 "|                                           |",
                 "|                                           |",
                 "|___________________________________________|"};
-
+            //Centrerar menyn.
             for (int i = 0; i < MoveVehicle.Length; i++)
             {
                 Console.WriteLine(MoveVehicle[i].PadLeft(Console.WindowWidth / 2 + MoveVehicle[0].Length / 2));
             }
         }
-        static void TaBortFordon()
+        static void RemoveVehicleMenu()
         {
+            //Clearar konsolen, skriver ut garaget och sedan info menyn.
             Console.Clear();
             PrintColumnsOfVehicles();
             string[] RemoveVehicle = new string[11] {
                 "_____________________________________________",
-                "|       Titel: How to remove Car/MC         |",
+                "|           How to remove Car/MC            |",
                 "|                                           |",
                 "|  *To remove the vehicle, enter its        |",
                 "|   register number, and you will find the  |",
@@ -1020,7 +1024,7 @@ namespace Prague_Parking
                 "|                                           |",
                 "|                                           |",
                 "|___________________________________________|"};
-
+            //Centrerar menyn.
             for (int i = 0; i < RemoveVehicle.Length; i++)
             {
                 Console.WriteLine(RemoveVehicle[i].PadLeft(Console.WindowWidth / 2 + RemoveVehicle[0].Length / 2));

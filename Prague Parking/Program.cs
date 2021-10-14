@@ -408,14 +408,14 @@ namespace Prague_Parking
                     }
                 }
                 //beroende på vart i strängen MCn finns
-                else if (myVehicles[index].Contains("MC ") && FoundTwoMatches(myVehicles[nextSpot]) == false && FoundTwoMatches(myVehicles[index]) == false)
+                else if (myVehicles[index].Contains("MC ") && FoundTwoMatches(myVehicles[nextSpot]) == false && FoundTwoMatches(myVehicles[index]) == false && !myVehicles[nextSpot].Contains("CAR"))
                 {
                         myVehicles[nextSpot] += "|";
                         myVehicles[nextSpot] += myVehicles[index];
                         myVehicles[index] = "Ledig";
                         break;
                 }
-                else if(FoundTwoMatches(myVehicles[index]) == true && FoundTwoMatches(myVehicles[nextSpot]) == false)
+                else if(FoundTwoMatches(myVehicles[index]) == true && FoundTwoMatches(myVehicles[nextSpot]) == false && !myVehicles[nextSpot].Contains("CAR"))
                 {
                     string[] tempHolder = myVehicles[index].Split("|");
                     if (tempHolder[0].Contains(searchForRegistration))

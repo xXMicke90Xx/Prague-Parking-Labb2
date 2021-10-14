@@ -6,7 +6,6 @@ namespace Prague_Parking
 {
     class Program
     {
-
         public static string[] myVehicles = new string[100];
         public static int index = 0;
         public static int nextSpot = 0;
@@ -89,7 +88,7 @@ namespace Prague_Parking
         //--------------------Skriver ut Huvudmenyn -------------------------------
         static void MainMenu()
         {
-
+             
             string[] menu = new string[11] {
                 "_____________________________________________",
                 "|        Prague Parking System              |",
@@ -114,7 +113,6 @@ namespace Prague_Parking
         #region Print to the screen and color function
         static void PrintColumnsOfVehicles()
         {
-
             int toLong = Console.WindowWidth - (((Console.WindowWidth / 4) * 3) + 24);
             string frameForColumns = "";
             Console.WriteLine(frameForColumns.PadRight(Console.WindowWidth, '_'));
@@ -139,9 +137,6 @@ namespace Prague_Parking
                 Console.SetCursorPosition(Console.WindowWidth - 1, Console.CursorTop);
                     Console.ResetColor();
                 Console.Write("|");
-
-
-
 
             }
             Console.WriteLine(frameForColumns.PadRight(Console.WindowWidth, '_'));
@@ -249,7 +244,6 @@ namespace Prague_Parking
 
             //flyttar fordon
             CheckInCorrectPosition(vehicleType, registrationNumber, timeCheckedIn);
-
         }
 
 
@@ -473,9 +467,7 @@ namespace Prague_Parking
         {
             DateTime checkOutTime = DateTime.Now;
             DateTime checkInTime = Convert.ToDateTime(vehicle.Substring(vehicle.Length - 6));
-
             TimeSpan diff = checkOutTime.Subtract(checkInTime);
-
 
             return diff;
         }

@@ -643,7 +643,7 @@ namespace Prague_Parking
                                 regSearch = regSearch.Remove(regSearch.Length - 1);
                                 MoveOrCheckOutMessage(regSearch, checkOrMove); //Skriver ut standardtext beroende på vartifrån metoden har kallats
                                 Box(); //Snygg box för att skilja aktuellt val mot resten som finns
-                                index = SearchResult(regSearch.ToUpper()); // Används för att uppdatera index för myVehicle mot sökning baserat på lägsta index -> flest matchande tecken
+                                index = SearchResult(regSearch.ToUpper(), checkOrMove); // Används för att uppdatera index för myVehicle mot sökning baserat på lägsta index -> flest matchande tecken
                                 Console.SetCursorPosition(0, cursorHeight);
                                 break;
                             }
@@ -656,9 +656,10 @@ namespace Prague_Parking
                                 regSearch += cki.KeyChar;
                                 MoveOrCheckOutMessage(regSearch, checkOrMove); //Skriver ut standardtext beroende på vartifrån metoden har kallats
                                 Box(); //Snygg box för att skilja aktuellt val mot resten som finns
-                                index = SearchResult(regSearch.ToUpper()); // Används för att uppdatera index för myVehicle mot sökning baserat på lägsta index -> flest matchande tecken
+                                index = SearchResult(regSearch.ToUpper(), checkOrMove); // Används för att uppdatera index för myVehicle mot sökning baserat på lägsta index -> flest matchande tecken
                                 Console.SetCursorPosition(0, cursorHeight);
                             }
+                           
                             break;
                         }
                 }
@@ -844,12 +845,25 @@ namespace Prague_Parking
             Console.SetCursorPosition(0, windowHeight - 4);
 
         }
-        //-----------------------------------Söker Lista efter Regnummer---------------------------------------
-        static int SearchResult(string toCheck)
+        static void CleanScreen(int windowWidth, int windowHeight)
         {
+
+            Console.SetCursorPosition(windowWidth, windowHeight);
+            for (int i = 0; i < 15; i++)
+            {
+                Console.Write(new string(' ', Console.WindowWidth));
+            }
+
+            Console.SetCursorPosition(0, windowHeight - 4);
+
+        }
+        //-----------------------------------Söker Lista efter Regnummer---------------------------------------
+        static int SearchResult(string toCheck, string checkOrMove)
+        {
+            bool exactMatch = false;
             bool firstMatch = false;
             int WindowHeightSetting = 43;
-            string tempReg = ""; //
+            string tempReg = ""; 
             int numberOfMatches = 0;
             int savedindex = 0;
             for (int i = 0; i < myVehicles.Length; i++)
@@ -873,12 +887,30 @@ namespace Prague_Parking
 
                 }
                 //  Själva spar och utskrifsfunktionen. firstmatch = det som användaren kommer få välja, resten blir bara utskrivet (up till totalt 10 regnummer)
-                if (tempReg.Contains(toCheck) && numberOfMatches < 10 && myVehicles[i] != "Ledig")
+               
+                
+                if (tempReg == toCheck)
                 {
-                    if (firstMatch == false)
+                    WindowHeightSetting = 43;
+                    PrintSearchResult(i, firstMatch, WindowHeightSetting, tempReg, toCheck);
+                    firstMatch = true;
+                    exactMatch = true;
+                    savedindex = i;
+                    numberOfMatches++;
+                    WindowHeightSetting++;
+                    i = myVehicles.Length;
+
+                    
+                    
+
+                }
+                
+                else if (tempReg.Contains(toCheck) && numberOfMatches < 10 && myVehicles[i] != "Ledig")
+                {
+                    if (firstMatch == false && exactMatch == false)
                     {
 
-                        PrintSearchResult(i, firstMatch, WindowHeightSetting);
+                        PrintSearchResult(i, firstMatch, WindowHeightSetting, tempReg, toCheck);
                         firstMatch = true;
                         savedindex = i;
                         numberOfMatches++;
@@ -887,7 +919,7 @@ namespace Prague_Parking
                     }
                     else
                     {
-                        PrintSearchResult(i, firstMatch, WindowHeightSetting);
+                        PrintSearchResult(i, firstMatch, WindowHeightSetting, tempReg, toCheck);
                         numberOfMatches++;
                         WindowHeightSetting++;
                     }
@@ -899,14 +931,23 @@ namespace Prague_Parking
                 return -1;
         }
         //-------------------------------Skriver ut sökresultat på en specifik plats----------------------------
-        static void PrintSearchResult(int index, bool firstMatch, int WindowHeightSetting)
+        static void PrintSearchResult(int index, bool firstMatch, int WindowHeightSetting, string tempReg, string toSearch)
         {
 
             int WindowWidthSetting = (Console.WindowWidth / 4) * 3;
-
-
-            if (firstMatch == false)
+            if (tempReg == toSearch)
             {
+                CleanScreen((Console.WindowWidth / 4) * 3, 43);
+                Box();
+                Console.SetCursorPosition(WindowWidthSetting, WindowHeightSetting);
+                ColoredChoice("FirstChoice");
+                Console.Write(myVehicles[index]);
+                Console.ResetColor();
+            }
+
+            else if (firstMatch == false)
+            {
+                
                 Console.SetCursorPosition(WindowWidthSetting, WindowHeightSetting);
                 ColoredChoice("FirstChoice");
                 Console.Write(myVehicles[index]);

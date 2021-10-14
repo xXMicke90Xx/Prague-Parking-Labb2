@@ -347,9 +347,9 @@ namespace Prague_Parking
 
         }
         //-----------------------------------------------------------------------------------------------
-        private static int InsertMovedVehicle(ref int index, string searchForRegistration)
+        private static void InsertMovedVehicle(ref int index, string searchForRegistration)
         {
-            int nextSpot;
+            int nextSpot = 0;
             do
             {
                 Console.SetCursorPosition((Console.WindowWidth) / 2 - 13, Console.CursorTop);
@@ -358,15 +358,13 @@ namespace Prague_Parking
                 nextSpot = GetResponseAsNumber("Which spot do you want to move the vehicle to?", ref index);
 
             } while (nextSpot < 0 && nextSpot > 99 || nextSpot == index);
-            InsertAtCorrectPosition(index, searchForRegistration, nextSpot);
-
-            return nextSpot;
+            InsertAtCorrectPosition(index, searchForRegistration, ref nextSpot);
         }
         //----------------------------------Sätter in fordon på en korrekt position--------------------------------
-        private static void InsertAtCorrectPosition(int index, string searchForRegistration, int nextSpot)
+        private static void InsertAtCorrectPosition(int index, string searchForRegistration, ref int nextSpot)
         {
-            for (int i = 0; i < myVehicles.Length; i++)
-            {
+            //for (int i = 0; i < myVehicles.Length; i++)
+            //{
                 //sätter in en bil på rätt plats
                 if (myVehicles[nextSpot].Contains("Ledig") && myVehicles[index].Contains("CAR"))
                 {
@@ -380,7 +378,7 @@ namespace Prague_Parking
                     myVehicles[nextSpot] = myVehicles[index];
                     myVehicles[index] = "Ledig";
                 }
-                //om två motorcyklar finns finns
+                //om två motorcyklar finns 
                 else if (myVehicles[nextSpot].Contains("Ledig") && myVehicles[index].Contains("MC ") && FoundTwoMatches(myVehicles[index]) == true)
                 {
                     //om första platsen innehåller rätt regnummer
@@ -389,10 +387,9 @@ namespace Prague_Parking
                     {
                         if (!myVehicles[nextSpot].Contains("CAR")   )
                         {
-                            myVehicles[nextSpot] += "|";
                             myVehicles[nextSpot] = tempHolder[0];
                             myVehicles[index] = tempHolder[1];
-                            break;
+                            //break;
                         }
                     }
                     //om andra platsen innehåller rätt regnummer
@@ -403,7 +400,7 @@ namespace Prague_Parking
                             myVehicles[nextSpot] += "|";
                             myVehicles[nextSpot] = tempHolder[1];
                             myVehicles[index] = tempHolder[0];
-                            break;
+                            //break;
                         }
                     }
                 }
@@ -413,7 +410,7 @@ namespace Prague_Parking
                         myVehicles[nextSpot] += "|";
                         myVehicles[nextSpot] += myVehicles[index];
                         myVehicles[index] = "Ledig";
-                        break;
+                        //break;
                 }
                 else if(FoundTwoMatches(myVehicles[index]) == true && FoundTwoMatches(myVehicles[nextSpot]) == false && !myVehicles[nextSpot].Contains("CAR"))
                 {
@@ -438,25 +435,25 @@ namespace Prague_Parking
                 if (myVehicles[index].Contains("CAR") && myVehicles[nextSpot].Contains("CAR") || myVehicles[nextSpot].Contains("CAR") && myVehicles[index].Contains("CAR"))
                 {
                     ContainsCarAndCar();
-                    break;
+                    //break;
                 }
                 else if (myVehicles[index].Contains("CAR") && myVehicles[nextSpot].Contains("MC "))
                 {
                     ContainsCarAndMC();
-                    break;
+                    //break;
                 }
                 else if (myVehicles[index].Contains("MC ") && myVehicles[nextSpot].Contains("CAR"))
                 {
                     ContainsMcAndCar();
-                    break;
+                    //break;
                 }
-                else if (FoundTwoMatches(myVehicles[index])== false && FoundTwoMatches(myVehicles[nextSpot]) == true )
+                if (FoundTwoMatches(myVehicles[index]) == false && FoundTwoMatches(myVehicles[nextSpot]) == true && !myVehicles[nextSpot].Contains("CAR") && !myVehicles[index].Contains("CAR"))
                 {
                     ContainsTwoMc();
-                    break;
+                    //break;
                 }
 
-            }
+            //}
         }
        
 

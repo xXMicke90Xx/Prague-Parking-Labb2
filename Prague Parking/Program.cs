@@ -389,6 +389,7 @@ namespace Prague_Parking
                     {
                         if (!myVehicles[nextSpot].Contains("CAR")   )
                         {
+                            myVehicles[nextSpot] += "|";
                             myVehicles[nextSpot] = tempHolder[0];
                             myVehicles[index] = tempHolder[1];
                             break;
@@ -399,6 +400,7 @@ namespace Prague_Parking
                     {
                         if (!myVehicles[nextSpot].Contains("CAR"))
                         {
+                            myVehicles[nextSpot] += "|";
                             myVehicles[nextSpot] = tempHolder[1];
                             myVehicles[index] = tempHolder[0];
                             break;
@@ -406,7 +408,14 @@ namespace Prague_Parking
                     }
                 }
                 //beroende på vart i strängen MCn finns
-                else if (!myVehicles[nextSpot].Contains("CAR") && myVehicles[index].Contains("MC ") && FoundTwoMatches(myVehicles[nextSpot]) == false)
+                else if (myVehicles[index].Contains("MC ") && FoundTwoMatches(myVehicles[nextSpot]) == false && FoundTwoMatches(myVehicles[index]) == false)
+                {
+                        myVehicles[nextSpot] += "|";
+                        myVehicles[nextSpot] += myVehicles[index];
+                        myVehicles[index] = "Ledig";
+                        break;
+                }
+                else if(FoundTwoMatches(myVehicles[index]) == true && FoundTwoMatches(myVehicles[nextSpot]) == false)
                 {
                     string[] tempHolder = myVehicles[index].Split("|");
                     if (tempHolder[0].Contains(searchForRegistration))
@@ -414,15 +423,14 @@ namespace Prague_Parking
                         myVehicles[nextSpot] += "|";
                         myVehicles[nextSpot] += tempHolder[0];
                         myVehicles[index] = tempHolder[1];
-                        break;
                     }
                     else if (tempHolder[1].Contains(searchForRegistration))
                     {
                         myVehicles[nextSpot] += "|";
                         myVehicles[nextSpot] += tempHolder[1];
                         myVehicles[index] = tempHolder[0];
-                        break;
                     }
+
                 }
 
                // skickar felmeddelanden:
@@ -442,7 +450,7 @@ namespace Prague_Parking
                     ContainsMcAndCar();
                     break;
                 }
-                else if (myVehicles[index].Contains("MC ") && FoundTwoMatches(myVehicles[nextSpot]) == true || FoundTwoMatches(myVehicles[index]) == true && FoundTwoMatches(myVehicles[nextSpot]) == true)
+                else if (FoundTwoMatches(myVehicles[index])== false && FoundTwoMatches(myVehicles[nextSpot]) == true )
                 {
                     ContainsTwoMc();
                     break;

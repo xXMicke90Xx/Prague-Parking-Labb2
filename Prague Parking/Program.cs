@@ -891,6 +891,7 @@ namespace Prague_Parking
                 
                 if (tempReg == toCheck)
                 {
+
                     WindowHeightSetting = 43;
                     PrintSearchResult(i, firstMatch, WindowHeightSetting, tempReg, toCheck);
                     firstMatch = true;

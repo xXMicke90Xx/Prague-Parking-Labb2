@@ -89,7 +89,7 @@ namespace Prague_Parking
         //--------------------Skriver ut Huvudmenyn -------------------------------
         static void MainMenu()
         {
-             
+
             string[] menu = new string[11] {
                 "_____________________________________________",
                 "|        Prague Parking System              |",
@@ -132,11 +132,11 @@ namespace Prague_Parking
                 Console.Write($"{i + myVehicles.Length / 2 + 1} {myVehicles[i + myVehicles.Length / 2].PadRight((Console.WindowWidth / 4))}|");
                 //Skriver ut 76 - 100
                 ColorMatch(myVehicles[i + (myVehicles.Length / 4) * 3]);
-                bool twoMC = FoundTwoMatches(myVehicles [i + myVehicles.Length / 4 * 3]);
-                
-                Console.Write($"{i + ((myVehicles.Length / 4) * 3) + 1}{(i == 24 ? "" : " ")} {(twoMC == true && myVehicles[i + myVehicles.Length / 4 * 3].Length >= toLong? ShortenMatch(myVehicles[i + myVehicles.Length/4 * 3]): myVehicles[i + (myVehicles.Length / 4) * 3])}");
+                bool twoMC = FoundTwoMatches(myVehicles[i + myVehicles.Length / 4 * 3]);
+
+                Console.Write($"{i + ((myVehicles.Length / 4) * 3) + 1}{(i == 24 ? "" : " ")} {(twoMC == true && myVehicles[i + myVehicles.Length / 4 * 3].Length >= toLong ? ShortenMatch(myVehicles[i + myVehicles.Length / 4 * 3]) : myVehicles[i + (myVehicles.Length / 4) * 3])}");
                 Console.SetCursorPosition(Console.WindowWidth - 1, Console.CursorTop);
-                    Console.ResetColor();
+                Console.ResetColor();
                 Console.Write("|");
 
             }
@@ -145,12 +145,12 @@ namespace Prague_Parking
         //------------------------Kortar ner strängen så den inte går utanför från skärmen--------------------------
         static string ShortenMatch(string vehicles)
         {
-            string [] split = new string[2];
+            string[] split = new string[2];
             split = vehicles.Split("|");
 
             split[0] = split[0].Substring(0, split[0].LastIndexOf("#"));
             split[1] = split[1].Substring(0, split[1].LastIndexOf("#"));
-            
+
             return $@"{split[0]}|{split[1]}";
         }
 
@@ -217,6 +217,10 @@ namespace Prague_Parking
             if (result < 0 || result > 99)
             {
                 result = index;
+                string newMessage = "Invalid move, minimum range is 1 and maximum is 100";
+                Console.SetCursorPosition((Console.WindowWidth - newMessage.Length) / 2 - 1, Console.CursorTop);
+                Console.WriteLine(newMessage);
+                Console.ReadKey();
             }
             return result;
         }
@@ -238,8 +242,8 @@ namespace Prague_Parking
                 registrationNumber = GetResponse("Enter your registration number, max 10 characters long: ");
                 registrationNumber = EnterRegistration(registrationNumber);
                 isNoMatch = SearchForRegistration(ref index, registrationNumber);
-
-            } while (isNoMatch == true);
+                
+            } while (isNoMatch == true || string.IsNullOrEmpty(registrationNumber) || registrationNumber.Contains("CAR") || registrationNumber.Contains("MC"));
             DateTime timeCheckedIn = DateTime.Now;
 
             //flyttar fordon
@@ -306,7 +310,7 @@ namespace Prague_Parking
             {
 
                 //byt till isnullorempty
-                while (registrationNumber == null || registrationNumber == "" || !matchAccents.IsMatch(registrationNumber[i].ToString().ToUpper()) && !Char.IsLetterOrDigit(registrationNumber[i]) || registrationNumber.Length > 10)
+                while (!matchAccents.IsMatch(registrationNumber[i].ToString().ToUpper()) && !Char.IsLetterOrDigit(registrationNumber[i]) || registrationNumber.Length > 10)
                 {
                     registrationNumber = GetResponse("Enter your registration number, max 10 characters long: ");
                     i = 0;
@@ -336,7 +340,7 @@ namespace Prague_Parking
 
             string searchForRegistration = "";
             searchForRegistration = ActiveSearch("Move", ref index);
-            if (searchForRegistration != "")
+            if (!string.IsNullOrWhiteSpace(searchForRegistration))
             {
                 InsertMovedVehicle(ref index, searchForRegistration);
             }
@@ -369,13 +373,12 @@ namespace Prague_Parking
                     myVehicles[nextSpot] = myVehicles[index];
                     myVehicles[index] = "Ledig";
                 }
+
                 //om en motorcykel finns
                 else if (myVehicles[nextSpot].Contains("Ledig") && myVehicles[index].Contains("MC ") && FoundTwoMatches(myVehicles[index]) == false)
                 {
-
                     myVehicles[nextSpot] = myVehicles[index];
                     myVehicles[index] = "Ledig";
-
                 }
                 //om två motorcyklar finns finns
                 else if (myVehicles[nextSpot].Contains("Ledig") && myVehicles[index].Contains("MC ") && FoundTwoMatches(myVehicles[index]) == true)
@@ -384,7 +387,7 @@ namespace Prague_Parking
                     string[] tempHolder = myVehicles[index].Split("|");
                     if (tempHolder[0].Contains(searchForRegistration))
                     {
-                        if (!myVehicles[nextSpot].Contains("CAR"))
+                        if (!myVehicles[nextSpot].Contains("CAR")   )
                         {
                             myVehicles[nextSpot] = tempHolder[0];
                             myVehicles[index] = tempHolder[1];
@@ -410,19 +413,79 @@ namespace Prague_Parking
                     {
                         myVehicles[nextSpot] += "|";
                         myVehicles[nextSpot] += tempHolder[0];
-                        myVehicles[index] = "Ledig";
+                        myVehicles[index] = tempHolder[1];
                         break;
                     }
                     else if (tempHolder[1].Contains(searchForRegistration))
                     {
                         myVehicles[nextSpot] += "|";
                         myVehicles[nextSpot] += tempHolder[1];
-                        myVehicles[index] = "Ledig";
+                        myVehicles[index] = tempHolder[0];
                         break;
                     }
                 }
+
+               // skickar felmeddelanden:
+
+                if (myVehicles[index].Contains("CAR") && myVehicles[nextSpot].Contains("CAR") || myVehicles[nextSpot].Contains("CAR") && myVehicles[index].Contains("CAR"))
+                {
+                    ContainsCarAndCar();
+                    break;
+                }
+                else if (myVehicles[index].Contains("CAR") && myVehicles[nextSpot].Contains("MC "))
+                {
+                    ContainsCarAndMC();
+                    break;
+                }
+                else if (myVehicles[index].Contains("MC ") && myVehicles[nextSpot].Contains("CAR"))
+                {
+                    ContainsMcAndCar();
+                    break;
+                }
+                else if (myVehicles[index].Contains("MC ") && FoundTwoMatches(myVehicles[nextSpot]) == true || FoundTwoMatches(myVehicles[index]) == true && FoundTwoMatches(myVehicles[nextSpot]) == true)
+                {
+                    ContainsTwoMc();
+                    break;
+                }
+
             }
         }
+       
+
+        private static void ContainsTwoMc()
+        {
+            string newMessage = "A motorcykle can't move to a place containing two motorcykles!";
+            Console.SetCursorPosition((Console.WindowWidth - newMessage.Length) / 2 - 1, Console.CursorTop);
+            Console.WriteLine(newMessage);
+            Console.ReadLine();
+        }
+
+        private static void ContainsMcAndCar()
+        {
+            string newMessage = "A motorcykle can't move to a place containing a car!";
+            Console.SetCursorPosition((Console.WindowWidth - newMessage.Length) / 2 - 1, Console.CursorTop);
+            Console.WriteLine(newMessage);
+            Console.ReadLine();
+        }
+
+        private static void ContainsCarAndMC()
+        {
+            string newMessage = "A car can't move to a place containing a mc!";
+            Console.SetCursorPosition((Console.WindowWidth - newMessage.Length) / 2 - 1, Console.CursorTop);
+            Console.WriteLine(newMessage);
+            Console.ReadLine();
+        }
+
+        private static void ContainsCarAndCar()
+        {
+            string newMessage = "A car can't move to a place containing a car!";
+            Console.SetCursorPosition((Console.WindowWidth - newMessage.Length) / 2 - 1, Console.CursorTop);
+            Console.WriteLine(newMessage);
+            Console.ReadLine();
+        }
+
+
+
         //Används för att kontrollera så att samma regnummer inte existerar vid incheckning av nytt fordon
         private static bool SearchForRegistration(ref int index, string searchForRegistration)
         {
@@ -502,19 +565,19 @@ namespace Prague_Parking
             Console.SetCursorPosition((Console.WindowWidth / 2), (Console.WindowHeight / 2) - 1);
             Console.Write(index);
             Console.SetCursorPosition((Console.WindowWidth / 2) - 10, (Console.WindowHeight / 2) + 3);
-            Console.Write(Math.Round((double)checkOutTime.Days, 0)+ " " + "Days " + Math.Round((double)checkOutTime.Hours, 0).ToString() + " Hours " + Math.Round(checkOutTime.TotalMinutes, 0) + " Minutes");
+            Console.Write(Math.Round((double)checkOutTime.Days, 0) + " " + "Days " + Math.Round((double)checkOutTime.Hours, 0).ToString() + " Hours " + Math.Round(checkOutTime.TotalMinutes, 0) + " Minutes");
             Console.ReadLine();
         }
 
         //----------------------------Skriver ut text beroende på vilket menyval som har gjorts--------------------------------
         public static void MoveOrCheckOutMessage(string RegSearch, string checkOrMove)
         {
-            
-                Console.WriteLine("\n\n");
-                Console.WriteLine($"Please enter the registration number of the car you wish to {checkOrMove}.");
-                Console.Write($"Registration number: {RegSearch}");
 
-           
+            Console.WriteLine("\n\n");
+            Console.WriteLine($"Please enter the registration number of the car you wish to {checkOrMove}.");
+            Console.Write($"Registration number: {RegSearch}");
+
+
         }
 
         //------------------------Ska användas för att definera vilket regnummer man vill flytta/tabort, varje knapptryck registreras-----------------------------------------------------------
@@ -611,7 +674,7 @@ namespace Prague_Parking
                     myVehicles[index] = OneMCRemove(ref index, cki, checkOrMove);
                     CheckoutMessage(index + 1);
                 }
-                
+
             }
             else if (myVehicles[index].Substring(0, 3) == "CAR")
             {
@@ -625,7 +688,7 @@ namespace Prague_Parking
                     myVehicles[index] = "Ledig";
                 }
 
-                
+
 
             }
             else if (myVehicles[index].Substring(0, 3) == "MC ")
@@ -640,7 +703,7 @@ namespace Prague_Parking
                     myVehicles[index] = "Ledig";
                 }
 
-                
+
             }
             return "";
         }
@@ -797,9 +860,9 @@ namespace Prague_Parking
                     else if (split[0].Substring(split[0].IndexOf('#') + 1, split[0].LastIndexOf('#') - 4).Contains(toCheck)) //Andra regnummret en match? 
                     {
                         tempReg = split[0].Substring(split[0].IndexOf('#') + 1, split[0].LastIndexOf('#') - 4);
-                       
+
                     }
-                    
+
                 }
                 //  Själva spar och utskrifsfunktionen. firstmatch = det som användaren kommer få välja, resten blir bara utskrivet (up till totalt 10 regnummer)
                 if (tempReg.Contains(toCheck) && numberOfMatches < 10 && myVehicles[i] != "Ledig")
@@ -906,7 +969,7 @@ namespace Prague_Parking
             {
                 userInput = GetResponse("\tPlease enter a number between 1-4: ");
 
-            } while (userInput != "1" && userInput != "2" && userInput != "3" && userInput != "4");      
+            } while (userInput != "1" && userInput != "2" && userInput != "3" && userInput != "4");
 
             do
             {

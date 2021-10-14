@@ -347,9 +347,9 @@ namespace Prague_Parking
 
         }
         //-----------------------------------------------------------------------------------------------
-        private static void InsertMovedVehicle(ref int index, string searchForRegistration)
+        private static int InsertMovedVehicle(ref int index, string searchForRegistration)
         {
-            int nextSpot = 0;
+            int nextSpot;
             do
             {
                 Console.SetCursorPosition((Console.WindowWidth) / 2 - 13, Console.CursorTop);
@@ -358,13 +358,14 @@ namespace Prague_Parking
                 nextSpot = GetResponseAsNumber("Which spot do you want to move the vehicle to?", ref index);
 
             } while (nextSpot < 0 && nextSpot > 99 || nextSpot == index);
-            InsertAtCorrectPosition(index, searchForRegistration, ref nextSpot);
+            InsertAtCorrectPosition(index, searchForRegistration, nextSpot);
+
+            return nextSpot;
         }
         //----------------------------------Sätter in fordon på en korrekt position--------------------------------
         private static void InsertAtCorrectPosition(int index, string searchForRegistration, ref int nextSpot)
         {
-            //for (int i = 0; i < myVehicles.Length; i++)
-            //{
+            
                 //sätter in en bil på rätt plats
                 if (myVehicles[nextSpot].Contains("Ledig") && myVehicles[index].Contains("CAR"))
                 {
@@ -387,9 +388,10 @@ namespace Prague_Parking
                     {
                         if (!myVehicles[nextSpot].Contains("CAR")   )
                         {
+                            myVehicles[nextSpot] += "|";
                             myVehicles[nextSpot] = tempHolder[0];
                             myVehicles[index] = tempHolder[1];
-                            //break;
+                            
                         }
                     }
                     //om andra platsen innehåller rätt regnummer
@@ -400,7 +402,7 @@ namespace Prague_Parking
                             myVehicles[nextSpot] += "|";
                             myVehicles[nextSpot] = tempHolder[1];
                             myVehicles[index] = tempHolder[0];
-                            //break;
+                            
                         }
                     }
                 }
@@ -410,7 +412,7 @@ namespace Prague_Parking
                         myVehicles[nextSpot] += "|";
                         myVehicles[nextSpot] += myVehicles[index];
                         myVehicles[index] = "Ledig";
-                        //break;
+                        
                 }
                 else if(FoundTwoMatches(myVehicles[index]) == true && FoundTwoMatches(myVehicles[nextSpot]) == false && !myVehicles[nextSpot].Contains("CAR"))
                 {
@@ -429,31 +431,37 @@ namespace Prague_Parking
                     }
 
                 }
+                else
+                {
+                    // skickar felmeddelanden:
+
+                    if (myVehicles[index].Contains("CAR") && myVehicles[nextSpot].Contains("CAR") || myVehicles[nextSpot].Contains("CAR") && myVehicles[index].Contains("CAR"))
+                    {
+                        ContainsCarAndCar();
+                        
+                    }
+                    else if (myVehicles[index].Contains("CAR") && myVehicles[nextSpot].Contains("MC "))
+                    {
+                        ContainsCarAndMC();
+                        
+                    }
+                    else if (myVehicles[index].Contains("MC ") && myVehicles[nextSpot].Contains("CAR"))
+                    {
+                        ContainsMcAndCar();
+                        
+                    }
+                    else if (FoundTwoMatches(myVehicles[nextSpot]) == true)
+                    {
+                        ContainsTwoMc();
+                        
+                    }
+                }
 
                // skickar felmeddelanden:
 
-                if (myVehicles[index].Contains("CAR") && myVehicles[nextSpot].Contains("CAR") || myVehicles[nextSpot].Contains("CAR") && myVehicles[index].Contains("CAR"))
-                {
-                    ContainsCarAndCar();
-                    //break;
-                }
-                else if (myVehicles[index].Contains("CAR") && myVehicles[nextSpot].Contains("MC "))
-                {
-                    ContainsCarAndMC();
-                    //break;
-                }
-                else if (myVehicles[index].Contains("MC ") && myVehicles[nextSpot].Contains("CAR"))
-                {
-                    ContainsMcAndCar();
-                    //break;
-                }
-                if (FoundTwoMatches(myVehicles[index]) == false && FoundTwoMatches(myVehicles[nextSpot]) == true && !myVehicles[nextSpot].Contains("CAR") && !myVehicles[index].Contains("CAR"))
-                {
-                    ContainsTwoMc();
-                    //break;
-                }
+               
 
-            //}
+            
         }
        
 
@@ -935,8 +943,10 @@ namespace Prague_Parking
             int WindowWidthSetting = (Console.WindowWidth / 4) * 3;
             if (tempReg == toSearch)
             {
-                CleanScreen((Console.WindowWidth / 4) * 3, 43);
+                //CleanScreen((Console.WindowWidth / 4) * 3, 43);
+                
                 Box();
+
                 Console.SetCursorPosition(WindowWidthSetting, WindowHeightSetting);
                 ColoredChoice("FirstChoice");
                 Console.Write(myVehicles[index]);

@@ -179,14 +179,14 @@ namespace Prague_Parking
                 Console.ForegroundColor = ConsoleColor.Green;
             }
         }
-        static void ColorMatch(byte colorChange)
+        static void ColoredChoice(string choice)
         {
-            if (colorChange == 0)
+            if (choice == "FirstChoice")
             {
                 Console.BackgroundColor = ConsoleColor.White;
                 Console.ForegroundColor = ConsoleColor.Black;
             }
-            else if (colorChange == 1)
+            else if (choice == "SecondChoice")
             {
                 Console.BackgroundColor = ConsoleColor.Black;
                 Console.ForegroundColor = ConsoleColor.White;
@@ -508,32 +508,24 @@ namespace Prague_Parking
             }
             Console.SetCursorPosition((Console.WindowWidth / 2), (Console.WindowHeight / 2) - 1);
             Console.Write(index);
-            Console.SetCursorPosition((Console.WindowWidth / 2) - 8, (Console.WindowHeight / 2) + 3);
-            Console.Write(Math.Round((double)checkOutTime.Hours, 0).ToString() + "Hours " + Math.Round(checkOutTime.TotalMinutes, 0) + "Minutes");
+            Console.SetCursorPosition((Console.WindowWidth / 2) - 10, (Console.WindowHeight / 2) + 3);
+            Console.Write(Math.Round((double)checkOutTime.Days, 0)+ " " + "Days " + Math.Round((double)checkOutTime.Hours, 0).ToString() + " Hours " + Math.Round(checkOutTime.TotalMinutes, 0) + " Minutes");
             Console.ReadLine();
         }
 
         //----------------------------Skriver ut text beroende på vilket menyval som har gjorts--------------------------------
-        public static void MoveOrCheckOutMessage(string RegSearch, string check)
+        public static void MoveOrCheckOutMessage(string RegSearch, string checkOrMove)
         {
-            if (check == "CheckOut")
-            {
+            
                 Console.WriteLine("\n\n");
-                Console.WriteLine("Please enter the registration number of the car you wish to check out.");
+                Console.WriteLine($"Please enter the registration number of the car you wish to {checkOrMove}.");
                 Console.Write($"Registration number: {RegSearch}");
 
-            }
-            else if (check == "Move")
-            {
-                Console.WriteLine("\n\n");
-                Console.WriteLine("Please enter the registration number of the car you wish to move.");
-                Console.Write($"Registration number: {RegSearch}");
-
-            }
+           
         }
 
         //------------------------Ska användas för att definera vilket regnummer man vill flytta/tabort, varje knapptryck registreras-----------------------------------------------------------
-        static string ActiveSearch(string check, ref int index)
+        static string ActiveSearch(string checkOrMove, ref int index)
         {
             ConsoleKeyInfo cki;
 
@@ -549,7 +541,7 @@ namespace Prague_Parking
                 if (regSearch == "")
                 {
                     SearchTextClearer(); //Kommer användas upprepande för att endast rensa tecken (alla rader) under menyn
-                    MoveOrCheckOutMessage(regSearch, check);
+                    MoveOrCheckOutMessage(regSearch, checkOrMove);
                     Box();
                 }
 
@@ -562,12 +554,12 @@ namespace Prague_Parking
                             if (regSearch.Length > 0 && index >= 0)
                             {
                                 userDone = true;
-                                return UserHasChosen(check, ref index, cki, regSearch);    
+                                return UserHasChosen(checkOrMove, ref index, cki, regSearch);  // Retunerar regnummer till MoveVehicle om tillkallad därifrån  
                             }
                             else
                             {
-                                SearchTextClearer();
-                                MoveOrCheckOutMessage(regSearch, check);
+                                SearchTextClearer(); //Rensar undre del av skärm
+                                MoveOrCheckOutMessage(regSearch, checkOrMove); //Skriver ut standardtext beroende på vartifrån metoden har kallats
                                 Console.SetCursorPosition(0, cursorHeight);
                                 break;
                             }
@@ -583,11 +575,11 @@ namespace Prague_Parking
                                 break;
                             else
                             {
-                                SearchTextClearer();
+                                SearchTextClearer(); //Rensar undre del av skärm
                                 regSearch = regSearch.Remove(regSearch.Length - 1);
-                                MoveOrCheckOutMessage(regSearch, check);
-                                Box();
-                                index = SearchResult(regSearch.ToUpper());
+                                MoveOrCheckOutMessage(regSearch, checkOrMove); //Skriver ut standardtext beroende på vartifrån metoden har kallats
+                                Box(); //Snygg box för att skilja aktuellt val mot resten som finns
+                                index = SearchResult(regSearch.ToUpper()); // Används för att uppdatera index för myVehicle mot sökning baserat på lägsta index -> flest matchande tecken
                                 Console.SetCursorPosition(0, cursorHeight);
                                 break;
                             }
@@ -598,7 +590,7 @@ namespace Prague_Parking
                             {
                                 SearchTextClearer(); //Rensar undre del av skärm
                                 regSearch += cki.KeyChar;
-                                MoveOrCheckOutMessage(regSearch, check); //Skriver ut standardtext beroende på vartifrån metoden har kallats
+                                MoveOrCheckOutMessage(regSearch, checkOrMove); //Skriver ut standardtext beroende på vartifrån metoden har kallats
                                 Box(); //Snygg box för att skilja aktuellt val mot resten som finns
                                 index = SearchResult(regSearch.ToUpper()); // Används för att uppdatera index för myVehicle mot sökning baserat på lägsta index -> flest matchande tecken
                                 Console.SetCursorPosition(0, cursorHeight);
@@ -611,26 +603,26 @@ namespace Prague_Parking
             return "";
         }
         //----------------------------Ska, beroende på om move eller checkout är aktivt, skicka tillbaka en sträng med regnummer eller ta bort ett fordon-------------------------
-        public static string UserHasChosen(string check, ref int index, ConsoleKeyInfo cki, string regSearch)
+        public static string UserHasChosen(string checkOrMove, ref int index, ConsoleKeyInfo cki, string regSearch)
         {           //Denna if sats kollar helt enkelt ifall det finns 2 mc på platsen samt om regSearch finns i någon av fordonens regplåt
             if ((FoundTwoMatches(myVehicles[index]) == true && myVehicles[index].Substring(0, myVehicles[index].IndexOf('|')).Contains(regSearch.ToUpper())) ||
-                                   (FoundTwoMatches(myVehicles[index]) == true && myVehicles[index].Substring(myVehicles[index].IndexOf("|"), 14).Contains(regSearch.ToUpper())))
+                (FoundTwoMatches(myVehicles[index]) == true && myVehicles[index].Substring(myVehicles[index].IndexOf("|"), 14).Contains(regSearch.ToUpper())))
             {
                 Console.WriteLine("Two Vehicles was found in the space, please select one");  // Beror på ifall "move" eller "Checkout" är aktivt
-                if (check == "Move")
+                if (checkOrMove == "Move")
                 {
-                    return OneMCRemove(ref index, cki, check);
+                    return OneMCRemove(ref index, cki, checkOrMove);
                 }
                 else
                 {
-                    myVehicles[index] = OneMCRemove(ref index, cki, check);
+                    myVehicles[index] = OneMCRemove(ref index, cki, checkOrMove);
                     CheckoutMessage(index + 1);
                 }
                 
             }
             else if (myVehicles[index].Substring(0, 3) == "CAR")
             {
-                if (check == "Move")
+                if (checkOrMove == "Move")
                 {
                     return myVehicles[index];
                 }
@@ -645,7 +637,7 @@ namespace Prague_Parking
             }
             else if (myVehicles[index].Substring(0, 3) == "MC ")
             {
-                if (check == "Move")
+                if (checkOrMove == "Move")
                 {
                     return myVehicles[index];
                 }
@@ -666,18 +658,18 @@ namespace Prague_Parking
             CleanScreen(position);
         }
         //--------------------------------------Vid sökning och två fordon finns på samma plats, låter användaren välja ett fordon------------------------------------------------------- 
-        private static string OneMCRemove(ref int index, ConsoleKeyInfo cki, string check)
+        private static string OneMCRemove(ref int index, ConsoleKeyInfo cki, string checkOrMove)
         {
 
-            // ColorMatch är en överlagring på en metod, "0" är "BlacknWhite" och "1" "WhitenBlack" säger vilket färgval man vill ha (Bakgrund - TeckenFärg)
+            // Ska lysa upp bakgrunden på ett av 2 regnummer när 2 mc återfinns på samma plats och en av dom ska väljas
             //
             bool madeChoice = false;
             byte choice = 0;
             string[] split = myVehicles[index].Split("|");
 
-            ColorMatch(0);
+            ColoredChoice("FirstChoice"); //
             Console.Write($"{split[0]}");
-            ColorMatch(1);
+            ColoredChoice("SecondChoice");
             Console.Write(" | ");
             Console.Write($"{split[1]}");
 
@@ -687,14 +679,14 @@ namespace Prague_Parking
 
                 switch (cki.Key)
                 {
-                    case ConsoleKey.RightArrow:
+                    case ConsoleKey.RightArrow: //Högra sidan ska ha vit bakgrund och svarta tecken
                         {
                             if (choice != 1)
                             {
                                 Console.SetCursorPosition(0, Console.CursorTop);
-                                ColorMatch(1);
+                                ColoredChoice("SecondChoice");
                                 Console.Write($"{split[0]} | ");
-                                ColorMatch(0);
+                                ColoredChoice("FirstChoice");
                                 Console.Write($"{split[1]}");
 
                                 choice = 1;
@@ -705,14 +697,14 @@ namespace Prague_Parking
                                 break;
                             }
                         }
-                    case ConsoleKey.LeftArrow:
+                    case ConsoleKey.LeftArrow: //Vänstra sidan ska ha vit bakgrund och svarta tecken
                         {
                             if (choice != 0)
                             {
                                 Console.SetCursorPosition(0, Console.CursorTop);
-                                ColorMatch(0);
+                                ColoredChoice("FirstChoice");
                                 Console.Write($"{split[0]}");
-                                ColorMatch(1);
+                                ColoredChoice("SecondChoice");
                                 Console.Write($" | {split[1]}");
                                 choice = 0;
                                 break;
@@ -723,7 +715,7 @@ namespace Prague_Parking
                             }
 
                         }
-                    case ConsoleKey.Enter:
+                    case ConsoleKey.Enter: //Användaren har valt fordon
                         {
                             madeChoice = true;
                             break;
@@ -737,16 +729,16 @@ namespace Prague_Parking
 
             Console.ResetColor();
             // ska, beroende på om det ska flyttas ett fordon eller tas bort ett fordon, retunera registreringsnummret, move retunerar det sökta, remove det osökta(för att skrivas ensam på det indexet)
-            if (choice == 0 && check == "Move")
+            if (choice == 0 && checkOrMove == "Move")
             {
                 return split[0].Substring(split[0].IndexOf('#') + 1, split[0].LastIndexOf('#') - 4);
             }
-            if (choice == 0 && check == "CheckOut")
+            if (choice == 0 && checkOrMove == "CheckOut")
             {
                 return split[1];
 
             }
-            else if (choice == 1 && check == "Move")
+            else if (choice == 1 && checkOrMove == "Move")
             {
                 return split[1].Substring(split[1].IndexOf('#') + 1, split[1].LastIndexOf('#') - 4);
             }
@@ -793,30 +785,30 @@ namespace Prague_Parking
         {
             bool firstMatch = false;
             int WindowHeightSetting = 43;
-            string tempReg = "";
+            string tempReg = ""; //
             int numberOfMatches = 0;
             int savedindex = 0;
             for (int i = 0; i < myVehicles.Length; i++)
             {
-                if (myVehicles[i] != "Ledig" && FoundTwoMatches(myVehicles[i]) != true)
+                if (myVehicles[i] != "Ledig" && FoundTwoMatches(myVehicles[i]) != true) // inte ledig och ej 2 parkerade MCs
                 {
                     tempReg = myVehicles[i].Substring(myVehicles[i].IndexOf('#') + 1, myVehicles[i].LastIndexOf('#') - 4);
                 }
-                else if (FoundTwoMatches(myVehicles[i]) == true)
+                else if (FoundTwoMatches(myVehicles[i]) == true)  // Om två MCs återfanns
                 {
                     string[] split = myVehicles[i].Split("|");
-                    if (split[1].Substring(split[1].IndexOf('#') + 1, split[1].LastIndexOf('#') - 4).Contains(toCheck))
+                    if (split[1].Substring(split[1].IndexOf('#') + 1, split[1].LastIndexOf('#') - 4).Contains(toCheck)) //Första regnummret en match? 
                     {
                         tempReg = split[1].Substring(split[1].IndexOf('#') + 1, split[1].LastIndexOf('#') - 4);
                     }
-                    else if (split[0].Substring(split[0].IndexOf('#') + 1, split[0].LastIndexOf('#') - 4).Contains(toCheck))
+                    else if (split[0].Substring(split[0].IndexOf('#') + 1, split[0].LastIndexOf('#') - 4).Contains(toCheck)) //Andra regnummret en match? 
                     {
                         tempReg = split[0].Substring(split[0].IndexOf('#') + 1, split[0].LastIndexOf('#') - 4);
                        
                     }
                     
                 }
-
+                //  Själva spar och utskrifsfunktionen. firstmatch = det som användaren kommer få välja, resten blir bara utskrivet (up till totalt 10 regnummer)
                 if (tempReg.Contains(toCheck) && numberOfMatches < 10 && myVehicles[i] != "Ledig")
                 {
                     if (firstMatch == false)
@@ -852,7 +844,7 @@ namespace Prague_Parking
             if (firstMatch == false)
             {
                 Console.SetCursorPosition(WindowWidthSetting, WindowHeightSetting);
-                ColorMatch(0);
+                ColoredChoice("FirstChoice");
                 Console.Write(myVehicles[index]);
                 Console.ResetColor();
             }
@@ -879,10 +871,10 @@ namespace Prague_Parking
         {
             string[] box = new string[4]
 
-            {   "        Current Choice        ",
-                "------------------------------",
-                "|                            |",
-                "------------------------------"
+            {   "                      Current Choice                        ",
+                "------------------------------------------------------------",
+                "|                                                          |",
+                "------------------------------------------------------------"
             };
 
             for (int i = 0; i < box.Length; i++)

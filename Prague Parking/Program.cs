@@ -977,7 +977,7 @@ namespace Prague_Parking
             //Om personen inte anger ett tal mellan 1-4 så kommer datorn fråga efter ett nummber mellan 1-4.
             do
             {
-                userInput = GetResponse("\tPlease enter a number between 1-4: ");
+                userInput = GetResponse("Please enter a number between 1-4: ");
             } while (userInput != "1" && userInput != "2" && userInput != "3" && userInput != "4");
 
             do

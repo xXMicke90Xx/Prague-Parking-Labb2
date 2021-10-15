@@ -898,7 +898,7 @@ namespace Prague_Parking
             int WindowWidthSetting = (Console.WindowWidth / 4) * 3;
             if (tempReg == toSearch)
             {
-                //CleanScreen((Console.WindowWidth / 4) * 3, 43);
+
                 Box();
 
                 Console.SetCursorPosition(WindowWidthSetting, WindowHeightSetting);
